@@ -9,7 +9,7 @@ var descriptionsArr = [
   'Вот это тачка!'
 ];
 
-var commentsArr = [
+var commentsSource = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -18,8 +18,20 @@ var commentsArr = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 var countOfPicture = 25;
+var generatedPictureBlocks = [];
 var generateBlocks = function () {
 
+  // формирование массива с комментариями
+  var generateComments = function () {
+    var commentsArr = [];
+    commentsArr.length = Math.floor(Math.random() * 10);
+    for (var i = 0; i < commentsArr.length; i++) {
+      commentsArr[i] = commentsSource[Math.floor(Math.random() * commentsSource.length)];
+    }
+    return commentsArr;
+  };
+
+  // рандомизация массива с 1 до 25
   var arr = [];
   for (var i = 0; i < countOfPicture; i++) {
     arr[i] = i + 1;
@@ -32,13 +44,12 @@ var generateBlocks = function () {
     arr[rand] = temp;
   }
 
-  var generatedPictureBlocks = [];
-
+  // создание 25 объектов с заданными свойствами
   for (var k = 0; k < countOfPicture; k++) {
     generatedPictureBlocks[k] = {
       url: 'photos/' + arr[k] + '.jpg',
       likes: Math.floor(Math.random() * 185) + 15,
-      comments: commentsArr[Math.floor(Math.random() * (commentsArr.length - 1))],
+      comments: generateComments(),
       description: descriptionsArr[Math.floor(Math.random() * (descriptionsArr.length - 1))]
     };
   }
@@ -47,3 +58,29 @@ var generateBlocks = function () {
 
 generateBlocks();
 
+var pictureTemplate = document.querySelector('#picture')
+    .content
+    .querySelector('.picture');
+
+var fragment = document.createDocumentFragment();
+for (var j = 0; j < generatedPictureBlocks.length; j++) {
+  var pictureBlock = pictureTemplate.cloneNode(true);
+  pictureBlock.querySelector('.picture__img').src = generatedPictureBlocks[j].url;
+  pictureBlock.querySelector('.picture__likes').textContent = generatedPictureBlocks[j].likes;
+  pictureBlock.querySelector('.picture__comments').textContent = generatedPictureBlocks[j].comments.length;
+  fragment.appendChild(pictureBlock);
+}
+
+var pictureContainer = document.querySelector('.pictures');
+pictureContainer.appendChild(fragment);
+
+// формирование большого блока с изображением
+var pictureBig = document.querySelector('.big-picture');
+pictureBig.classList.remove('hidden');
+pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[1].url;
+pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[1].likes;
+pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[1].comments.length;
+pictureBig.querySelector('.social__caption').textContent = generatedPictureBlocks[1].description;
+
+document.querySelector('.social__comment-count').classList.add('visually-hidden');
+document.querySelector('.comments-loader').classList.add('visually-hidden');
