@@ -17,7 +17,7 @@ var commentsSource = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-var countOfPicture = 25;
+var PICTURE_COUNT = 25;
 var generatedPictureBlocks = [];
 var generateBlocks = function () {
 
@@ -33,7 +33,7 @@ var generateBlocks = function () {
 
   // рандомизация массива с 1 до 25
   var arr = [];
-  for (var i = 0; i < countOfPicture; i++) {
+  for (var i = 0; i < PICTURE_COUNT; i++) {
     arr[i] = i + 1;
   }
 
@@ -45,7 +45,7 @@ var generateBlocks = function () {
   }
 
   // создание 25 объектов с заданными свойствами
-  for (var k = 0; k < countOfPicture; k++) {
+  for (var k = 0; k < PICTURE_COUNT; k++) {
     generatedPictureBlocks[k] = {
       url: 'photos/' + arr[k] + '.jpg',
       likes: Math.floor(Math.random() * 185) + 15,
@@ -84,17 +84,19 @@ pictureBig.querySelector('.social__caption').textContent = generatedPictureBlock
 // переиспользуем существующий блок комментария
 var commentBlock = document.querySelector('.social__comment');
 // удаляем существующие в разметке комментарии
-while (document.querySelector('.social__comments').firstChild) {
-  document.querySelector('.social__comments').removeChild(document.querySelector('.social__comments').firstChild);
+var commentsContainer = document.querySelector('.social__comments');
+while (commentsContainer.firstChild) {
+  commentsContainer.removeChild(commentsContainer.firstChild);
 }
 // отрисовываем сгенерированные комментарии
 fragment = document.createDocumentFragment();
 for (var i = 0; i < generatedPictureBlocks[0].comments.length; i++) {
-  commentBlock.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
-  commentBlock.querySelector('.social__text').textContent = generatedPictureBlocks[0].comments[i];
-  fragment.appendChild(commentBlock.cloneNode(true));
+  var commentTemplate = commentBlock.cloneNode(true);
+  commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
+  commentTemplate.querySelector('.social__text').textContent = generatedPictureBlocks[0].comments[i];
+  fragment.appendChild(commentTemplate);
 }
-document.querySelector('.social__comments').appendChild(fragment);
+commentsContainer.appendChild(fragment);
 
 // скрываем ненужные детали
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
