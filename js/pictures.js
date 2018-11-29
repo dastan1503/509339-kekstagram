@@ -76,7 +76,9 @@ pictureContainer.appendChild(fragment);
 // формирование большого блока с изображением
 
 var pictureBig = document.querySelector('.big-picture');
-pictureBig.classList.remove('hidden');
+var showPictureBig = function () {
+  pictureBig.classList.remove('hidden');
+};
 pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[0].url;
 pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[0].likes;
 pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[0].comments.length;
@@ -101,3 +103,37 @@ commentsContainer.appendChild(fragment);
 // скрываем ненужные детали
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
+
+var switchEditPhotoPopup = function () {
+  var uploadFile = document.getElementById('upload-file');
+  var editImgwindow = document.querySelector('.img-upload__overlay');
+  var closeButton = document.querySelector('.img-upload__cancel');
+  var KEYCODE_ESC = 27;
+
+  var closeWindow = function () {
+    editImgwindow.classList.add('hidden');
+    uploadFile.value = '';
+  };
+
+  var closePopupEsc = function () {
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === KEYCODE_ESC) {
+        closeWindow();
+        document.removeEventListener('keydown', closePopupEsc);
+      }
+    });
+  };
+
+  var closeClick = function () {
+    closeButton.addEventListener('click', function () {
+    closeWindow();
+    });
+  }
+
+  uploadFile.addEventListener('change', function () {
+    editImgwindow.classList.remove('hidden');
+    closeClick();
+    closePopupEsc();
+  });
+};
+switchEditPhotoPopup();
