@@ -76,9 +76,11 @@ pictureContainer.appendChild(fragment);
 // формирование большого блока с изображением
 
 var pictureBig = document.querySelector('.big-picture');
+/*
 var showPictureBig = function () {
   pictureBig.classList.remove('hidden');
 };
+*/
 pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[0].url;
 pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[0].likes;
 pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[0].comments.length;
@@ -103,7 +105,7 @@ commentsContainer.appendChild(fragment);
 // скрываем ненужные детали
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
-
+// открытие\закрытие окна редактирования фото
 var switchEditPhotoPopup = function () {
   var uploadFile = document.getElementById('upload-file');
   var editImgwindow = document.querySelector('.img-upload__overlay');
@@ -126,9 +128,9 @@ var switchEditPhotoPopup = function () {
 
   var closeClick = function () {
     closeButton.addEventListener('click', function () {
-    closeWindow();
+      closeWindow();
     });
-  }
+  };
 
   uploadFile.addEventListener('change', function () {
     editImgwindow.classList.remove('hidden');
@@ -137,3 +139,59 @@ var switchEditPhotoPopup = function () {
   });
 };
 switchEditPhotoPopup();
+
+// изменение масштаба фото
+var editScalePhoto = function () {
+  var minValue = 25;
+  var maxValue = 100;
+  var stepValue = 25;
+  var value = maxValue;
+  var textControlValue = document.querySelector('.scale__control--value');
+  var shiftUp = document.querySelector('.scale__control--bigger');
+  var shiftDown = document.querySelector('.scale__control--smaller');
+
+  var textValue = function () {
+    textControlValue.value = value + '%';
+  };
+
+  textValue();
+
+  var scalable = function () {
+    document.querySelector('.img-upload__preview').style.transform = 'scale(' + value / 100 + ')';
+  };
+
+  shiftUp.addEventListener('click', function () {
+    value = value + stepValue;
+    if (value >= maxValue) {
+      value = maxValue;
+    }
+    textValue();
+    scalable();
+  });
+  shiftDown.addEventListener('click', function () {
+    value = value - stepValue;
+    if (value <= minValue) {
+      value = minValue;
+    }
+    textValue();
+    scalable();
+  });
+
+  textControlValue.addEventListener('focus', function () {
+    textControlValue.value = value;
+  });
+  textControlValue.addEventListener('blur', function () {
+    textControlValue.value = value + '%';
+  });
+
+  textControlValue.addEventListener('change', function () {
+    textControlValue.value = parseInt(textControlValue.value, 10);
+    if (textControlValue.value === 'NaN' || textControlValue.value > maxValue || textControlValue.value < minValue) {
+      textControlValue.value = maxValue;
+    }
+    value = textControlValue.value;
+    scalable();
+  });
+};
+editScalePhoto();
+
