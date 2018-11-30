@@ -20,6 +20,7 @@ var commentsSource = [
 var PICTURE_COUNT = 25;
 var generatedPictureBlocks = [];
 var generateBlocks = function () {
+
   // формирование массива с комментариями
   var generateComments = function () {
     var commentsArr = [];
@@ -71,10 +72,39 @@ for (var j = 0; j < generatedPictureBlocks.length; j++) {
 }
 var pictureContainer = document.querySelector('.pictures');
 pictureContainer.appendChild(fragment);
+
+// формирование большого блока с изображением
+
+var pictureBig = document.querySelector('.big-picture');
+/*
+var showPictureBig = function () {
+  pictureBig.classList.remove('hidden');
+};
+*/
+pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[0].url;
+pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[0].likes;
+pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[0].comments.length;
+pictureBig.querySelector('.social__caption').textContent = generatedPictureBlocks[0].description;
+// переиспользуем существующий блок комментария
+var commentBlock = document.querySelector('.social__comment');
+// удаляем существующие в разметке комментарии
+var commentsContainer = document.querySelector('.social__comments');
+while (commentsContainer.firstChild) {
+  commentsContainer.removeChild(commentsContainer.firstChild);
+}
+// отрисовываем сгенерированные комментарии
+fragment = document.createDocumentFragment();
+for (var i = 0; i < generatedPictureBlocks[0].comments.length; i++) {
+  var commentTemplate = commentBlock.cloneNode(true);
+  commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
+  commentTemplate.querySelector('.social__text').textContent = generatedPictureBlocks[0].comments[i];
+  fragment.appendChild(commentTemplate);
+}
+commentsContainer.appendChild(fragment);
+
 // скрываем ненужные детали
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
-
 // открытие\закрытие окна редактирования фото
 var switchEditPhotoPopup = function () {
   var uploadFile = document.getElementById('upload-file');
@@ -165,42 +195,22 @@ var editScalePhoto = function () {
 };
 editScalePhoto();
 
-var switchPictureBig = function () {
-  var pictureBig = document.querySelector('.big-picture');
+// переключение эффекта
+var switchEffectType = function () {
+  var effectItem = document.querySelectorAll('.effects__item');
+  var pictureSource = document.querySelector('.img-upload__preview');
 
-  var showPictureBig = function () {
-    pictureBig.classList.remove('hidden');
-  };
-
-  var generatePictureBig = function (a) {
-    var sourse = document.querySelectorAll('.picture');
-    pictureBig.querySelector('.big-picture__img img').src = sourse[a].url;
-    pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[a].likes;
-    pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[a].comments.length;
-    pictureBig.querySelector('.social__caption').textContent = generatedPictureBlocks[a].description;
-    // переиспользуем существующий блок комментария
-    var commentBlock = document.querySelector('.social__comment');
-    // удаляем существующие в разметке комментарии
-    var commentsContainer = document.querySelector('.social__comments');
-    while (commentsContainer.firstChild) {
-      commentsContainer.removeChild(commentsContainer.firstChild);
-    }
-    // отрисовываем сгенерированные комментарии
-    fragment = document.createDocumentFragment();
-    for (var i = 0; i < generatedPictureBlocks[a].comments.length; i++) {
-      var commentTemplate = commentBlock.cloneNode(true);
-      commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
-      commentTemplate.querySelector('.social__text').textContent = generatedPictureBlocks[a].comments[i];
-      fragment.appendChild(commentTemplate);
-    }
-    commentsContainer.appendChild(fragment);
-  };
-
-  for (var i = 0; i < PICTURE_COUNT; i++) {
-    pictureContainer.addEventListener('click', function () {
-      generatePictureBig(i);
-      showPictureBig();
+  var toggleEffect = function (num) {
+    effectItem[num].addEventListener('click', function () {
+      var effectName = effectItem[num].querySelector('.effects__radio').value;
+      pictureSource.classList = '';
+      pictureSource.classList.add('effects__preview--' + effectName);
     });
+  };
+
+  for (var k = 0; k < effectItem.length; k++) {
+    toggleEffect(j);
   }
 };
-switchPictureBig();
+
+switchEffectType();
