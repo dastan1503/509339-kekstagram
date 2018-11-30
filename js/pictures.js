@@ -199,17 +199,23 @@ editScalePhoto();
 var switchEffectType = function () {
   var effectItem = document.querySelectorAll('.effects__item');
   var pictureSource = document.querySelector('.img-upload__preview');
-
+  var effectRange = document.querySelector('.img-upload__effect-level');
+  effectRange.classList.add('hidden');
   var toggleEffect = function (num) {
     effectItem[num].addEventListener('click', function () {
+      if (num === 0) {
+        effectRange.classList.add('hidden');
+      } else {
+        effectRange.classList.remove('hidden');
+      }
       var effectName = effectItem[num].querySelector('.effects__radio').value;
-      pictureSource.classList = '';
+      pictureSource.classList = 'img-upload__preview';
       pictureSource.classList.add('effects__preview--' + effectName);
     });
   };
 
   for (var k = 0; k < effectItem.length; k++) {
-    toggleEffect(j);
+    toggleEffect(k);
   }
 };
 
