@@ -222,7 +222,11 @@ var switchEffectType = function () {
         heat: {type: 'brightness', min: 1, max: 3, unit: ''}
       };
       // сброс уровня фильтра + положение ползунка + цвет полосы ползунка
-      document.querySelector('.img-upload__preview').style = 'filter: ' + effectsSource[effectName].type + '(' + effectsSource[effectName].max + effectsSource[effectName].unit + ');';
+      if (effectsSource[effectName].type === 'none') {
+        document.querySelector('.img-upload__preview').style = 'filter: ' + effectsSource[effectName].type + ';';
+      } else {
+        document.querySelector('.img-upload__preview').style = 'filter: ' + effectsSource[effectName].type + '(' + effectsSource[effectName].max + effectsSource[effectName].unit + ');';
+      }
       document.querySelector('.effect-level__pin').style = 'left: 100%;';
       document.querySelector('.effect-level__depth').style = 'width: 100%';
     });
