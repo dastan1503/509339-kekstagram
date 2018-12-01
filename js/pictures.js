@@ -136,6 +136,7 @@ var switchEditPhotoPopup = function () {
     editImgwindow.classList.remove('hidden');
     closeClick();
     closePopupEsc();
+
   });
 };
 switchEditPhotoPopup();
@@ -211,6 +212,19 @@ var switchEffectType = function () {
       var effectName = effectItem[num].querySelector('.effects__radio').value;
       pictureSource.classList = 'img-upload__preview';
       pictureSource.classList.add('effects__preview--' + effectName);
+
+      var effectsSource = {
+        none: {type: 'none', min: '', max: '', unit: ''},
+        chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
+        sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
+        marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
+        phobos: {type: 'blur', min: 0, max: 3, unit: 'px'},
+        heat: {type: 'brightness', min: 1, max: 3, unit: ''}
+      };
+      // сброс уровня фильтра + положение ползунка + цвет полосы ползунка
+      document.querySelector('.img-upload__preview').style = 'filter: ' + effectsSource[effectName].type + '(' + effectsSource[effectName].max + effectsSource[effectName].unit + ');';
+      document.querySelector('.effect-level__pin').style = 'left: 100%;';
+      document.querySelector('.effect-level__depth').style = 'width: 100%';
     });
   };
 
@@ -218,5 +232,5 @@ var switchEffectType = function () {
     toggleEffect(k);
   }
 };
-
 switchEffectType();
+
