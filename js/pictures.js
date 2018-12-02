@@ -19,6 +19,8 @@ var commentsSource = [
 ];
 var PICTURE_COUNT = 25;
 var generatedPictureBlocks = [];
+var KEYCODE_ESC = 27;
+var KEYCODE_ENTER = 13;
 var generateBlocks = function () {
 
   // формирование массива с комментариями
@@ -55,62 +57,99 @@ var generateBlocks = function () {
   }
   return generatedPictureBlocks;
 };
-
 generateBlocks();
 
 // отрисовка миниатюр
-var pictureTemplate = document.querySelector('#picture')
-    .content
-    .querySelector('.picture');
-var fragment = document.createDocumentFragment();
-for (var j = 0; j < generatedPictureBlocks.length; j++) {
-  var pictureBlock = pictureTemplate.cloneNode(true);
-  pictureBlock.querySelector('.picture__img').src = generatedPictureBlocks[j].url;
-  pictureBlock.querySelector('.picture__likes').textContent = generatedPictureBlocks[j].likes;
-  pictureBlock.querySelector('.picture__comments').textContent = generatedPictureBlocks[j].comments.length;
-  fragment.appendChild(pictureBlock);
-}
-var pictureContainer = document.querySelector('.pictures');
-pictureContainer.appendChild(fragment);
-
-// формирование большого блока с изображением
-
-var pictureBig = document.querySelector('.big-picture');
-/*
-var showPictureBig = function () {
-  pictureBig.classList.remove('hidden');
+var drawMiniatures = function () {
+  var pictureTemplate = document.querySelector('#picture')
+      .content
+      .querySelector('.picture');
+  var fragment = document.createDocumentFragment();
+  for (var j = 0; j < generatedPictureBlocks.length; j++) {
+    var pictureBlock = pictureTemplate.cloneNode(true);
+    pictureBlock.querySelector('.picture__img').src = generatedPictureBlocks[j].url;
+    pictureBlock.querySelector('.picture__likes').textContent = generatedPictureBlocks[j].likes;
+    pictureBlock.querySelector('.picture__comments').textContent = generatedPictureBlocks[j].comments.length;
+    fragment.appendChild(pictureBlock);
+  }
+  var pictureContainer = document.querySelector('.pictures');
+  pictureContainer.appendChild(fragment);
 };
-*/
-pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[0].url;
-pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[0].likes;
-pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[0].comments.length;
-pictureBig.querySelector('.social__caption').textContent = generatedPictureBlocks[0].description;
-// переиспользуем существующий блок комментария
-var commentBlock = document.querySelector('.social__comment');
-// удаляем существующие в разметке комментарии
-var commentsContainer = document.querySelector('.social__comments');
-while (commentsContainer.firstChild) {
-  commentsContainer.removeChild(commentsContainer.firstChild);
-}
-// отрисовываем сгенерированные комментарии
-fragment = document.createDocumentFragment();
-for (var i = 0; i < generatedPictureBlocks[0].comments.length; i++) {
-  var commentTemplate = commentBlock.cloneNode(true);
-  commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
-  commentTemplate.querySelector('.social__text').textContent = generatedPictureBlocks[0].comments[i];
-  fragment.appendChild(commentTemplate);
-}
-commentsContainer.appendChild(fragment);
+drawMiniatures();
 
 // скрываем ненужные детали
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
+
+// открытие/закрытие большого фото
+var switchFullPhoto = function () {
+  var pictureMin = document.querySelectorAll('.picture');
+  var pictureBig = document.querySelector('.big-picture');
+
+  var closePopupEsc = function () {
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === KEYCODE_ESC) {
+        pictureBig.classList.add('hidden');
+        document.removeEventListener('keydown', closePopupEsc);
+      }
+    });
+  };
+
+  var showPictureBig = function (num) {
+    pictureMin[num].addEventListener('keydown', function (evt) {
+      if (evt.keyCode === KEYCODE_ENTER) {
+        pictureBig.classList.remove('hidden');
+        drawFullPicture(num);
+        closePopupEsc();
+      }
+    });
+
+    pictureMin[num].addEventListener('click', function () {
+      pictureBig.classList.remove('hidden');
+      drawFullPicture(num);
+      closePopupEsc();
+    });
+
+    document.querySelector('.big-picture__cancel').addEventListener('click', function () {
+      pictureBig.classList.add('hidden');
+    });
+  };
+
+  for (var i = 0; i < pictureMin.length; i++) {
+    showPictureBig(i);
+  }
+
+  var drawFullPicture = function (num) {
+    // формирование большого блока с изображением
+    pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[num].url;
+    pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[num].likes;
+    pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[num].comments.length;
+    pictureBig.querySelector('.social__caption').textContent = generatedPictureBlocks[num].description;
+    // переиспользуем существующий блок комментария
+    var commentBlock = document.querySelector('.social__comment');
+    // удаляем существующие в разметке комментарии
+    var commentsContainer = document.querySelector('.social__comments');
+    while (commentsContainer.firstChild) {
+      commentsContainer.removeChild(commentsContainer.firstChild);
+    }
+    // отрисовываем сгенерированные комментарии
+    var fragment = document.createDocumentFragment();
+    for (i = 0; i < generatedPictureBlocks[num].comments.length; i++) {
+      var commentTemplate = commentBlock.cloneNode(true);
+      commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
+      commentTemplate.querySelector('.social__text').textContent = generatedPictureBlocks[num].comments[i];
+      fragment.appendChild(commentTemplate);
+    }
+    commentsContainer.appendChild(fragment);
+  };
+};
+switchFullPhoto();
+
 // открытие\закрытие окна редактирования фото
 var switchEditPhotoPopup = function () {
   var uploadFile = document.getElementById('upload-file');
   var editImgwindow = document.querySelector('.img-upload__overlay');
   var closeButton = document.querySelector('.img-upload__cancel');
-  var KEYCODE_ESC = 27;
 
   var closeWindow = function () {
     editImgwindow.classList.add('hidden');
@@ -214,7 +253,7 @@ var switchEffectType = function () {
       pictureSource.classList.add('effects__preview--' + effectName);
 
       var effectsSource = {
-        none: {type: 'none', min: '', max: '', unit: ''},
+        none: {type: 'none'},
         chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
         sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
         marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
