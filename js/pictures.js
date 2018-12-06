@@ -99,14 +99,14 @@ var switchFullPhoto = function () {
     pictureMin[num].addEventListener('keydown', function (evt) {
       if (evt.keyCode === KEYCODE_ENTER) {
         pictureBig.classList.remove('hidden');
-        drawFullPicture(num);
+        drawFullPicture(generatedPictureBlocks[num]);
         closePopupEsc();
       }
     });
 
     pictureMin[num].addEventListener('click', function () {
       pictureBig.classList.remove('hidden');
-      drawFullPicture(num);
+      drawFullPicture(generatedPictureBlocks[num]);
       closePopupEsc();
     });
 
@@ -119,12 +119,12 @@ var switchFullPhoto = function () {
     showPictureBig(i);
   }
 
-  var drawFullPicture = function (num) {
+  var drawFullPicture = function (picture) {
     // формирование большого блока с изображением
-    pictureBig.querySelector('.big-picture__img img').src = generatedPictureBlocks[num].url;
-    pictureBig.querySelector('.likes-count').textContent = generatedPictureBlocks[num].likes;
-    pictureBig.querySelector('.comments-count').textContent = generatedPictureBlocks[num].comments.length;
-    pictureBig.querySelector('.social__caption').textContent = generatedPictureBlocks[num].description;
+    pictureBig.querySelector('.big-picture__img img').src = picture.url;
+    pictureBig.querySelector('.likes-count').textContent = picture.likes;
+    pictureBig.querySelector('.comments-count').textContent = picture.comments.length;
+    pictureBig.querySelector('.social__caption').textContent = picture.description;
     // переиспользуем существующий блок комментария
     var commentBlock = document.querySelector('.social__comment');
     // удаляем существующие в разметке комментарии
@@ -134,10 +134,10 @@ var switchFullPhoto = function () {
     }
     // отрисовываем сгенерированные комментарии
     var fragment = document.createDocumentFragment();
-    for (i = 0; i < generatedPictureBlocks[num].comments.length; i++) {
+    for (i = 0; i < picture.comments.length; i++) {
       var commentTemplate = commentBlock.cloneNode(true);
       commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
-      commentTemplate.querySelector('.social__text').textContent = generatedPictureBlocks[num].comments[i];
+      commentTemplate.querySelector('.social__text').textContent = picture.comments[i];
       fragment.appendChild(commentTemplate);
     }
     commentsContainer.appendChild(fragment);
@@ -241,7 +241,7 @@ var switchEffectType = function () {
   var pictureSource = document.querySelector('.img-upload__preview');
   var effectRange = document.querySelector('.img-upload__effect-level');
   effectRange.classList.add('hidden');
-  var toggleEffect = function (num) {
+  var toggleEffectHandler = function (num) {
     effectItem[num].addEventListener('click', function () {
       if (num === 0) {
         effectRange.classList.add('hidden');
@@ -249,7 +249,9 @@ var switchEffectType = function () {
         effectRange.classList.remove('hidden');
       }
       var effectName = effectItem[num].querySelector('.effects__radio').value;
-      pictureSource.classList = 'img-upload__preview';
+
+      var findedClass = pictureSource.classList + '';
+      pictureSource.classList.remove(findedClass.match(/effects__preview--\w+\b/));
       pictureSource.classList.add('effects__preview--' + effectName);
 
       var effectsSource = {
@@ -262,17 +264,17 @@ var switchEffectType = function () {
       };
       // сброс уровня фильтра + положение ползунка + цвет полосы ползунка
       if (effectsSource[effectName].type === 'none') {
-        document.querySelector('.img-upload__preview').style = 'filter: ' + effectsSource[effectName].type + ';';
+        pictureSource.style.filter = effectsSource[effectName].type;
       } else {
-        document.querySelector('.img-upload__preview').style = 'filter: ' + effectsSource[effectName].type + '(' + effectsSource[effectName].max + effectsSource[effectName].unit + ');';
+        pictureSource.style.filter = effectsSource[effectName].type + '(' + effectsSource[effectName].max + effectsSource[effectName].unit + ')';
       }
-      document.querySelector('.effect-level__pin').style = 'left: 100%;';
-      document.querySelector('.effect-level__depth').style = 'width: 100%';
+      document.querySelector('.effect-level__pin').style.left = '100%';
+      document.querySelector('.effect-level__depth').style.width = '100%';
     });
   };
 
   for (var k = 0; k < effectItem.length; k++) {
-    toggleEffect(k);
+    toggleEffectHandler(k);
   }
 };
 switchEffectType();
