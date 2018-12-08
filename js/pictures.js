@@ -253,7 +253,7 @@ var switchEffectType = function () {
       pictureSource.classList.add('effects__preview--' + effectName);
 
       var effectsSource = {
-        none: {type: 'none'},
+        none: {type: 'none', max: 'none'},
         chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
         sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
         marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
@@ -268,6 +268,7 @@ var switchEffectType = function () {
       }
       document.querySelector('.effect-level__pin').style.left = '100%';
       document.querySelector('.effect-level__depth').style.width = '100%';
+      document.querySelector('.effect-level__value').value = effectsSource[effectName].max;
     });
   };
 
