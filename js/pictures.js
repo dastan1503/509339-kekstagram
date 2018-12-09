@@ -21,6 +21,8 @@ var PICTURE_COUNT = 25;
 var generatedPictureBlocks = [];
 var KEYCODE_ESC = 27;
 var KEYCODE_ENTER = 13;
+var inputHashtags = document.querySelector('.text__hashtags');
+var inputDescription = document.querySelector('.text__description');
 var generateBlocks = function () {
 
   // формирование массива с комментариями
@@ -136,25 +138,27 @@ var switchFullPhoto = function () {
 switchFullPhoto();
 
 // функция закрытия окна
-var closePopup = function(button, PopupName) {
+var closePopup = function (button, PopupName) {
   var closeWindow = function () {
     PopupName.classList.add('hidden');
     document.removeEventListener('keydown', closePopupEsc);
   };
+
   var closePopupEsc = function () {
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === KEYCODE_ESC) {
+      if (evt.keyCode === KEYCODE_ESC && document.activeElement !== inputDescription && document.activeElement !== inputHashtags) {
         closeWindow();
       }
     });
   };
+
   var closePopupEnter = function () {
     button.addEventListener('keydown', function (evt) {
       if (evt.keyCode === KEYCODE_ENTER) {
         closeWindow();
       }
     });
-  }
+  };
   var closeClick = function () {
     button.addEventListener('click', function () {
       closeWindow();
@@ -277,4 +281,3 @@ var switchEffectType = function () {
   }
 };
 switchEffectType();
-
