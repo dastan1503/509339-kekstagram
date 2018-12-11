@@ -288,7 +288,12 @@ var hashtagsValidation = function () {
     var COUNT_HASHTAGS = 5;
     var HASHTAG_LENGTH = 20;
     var inputHashtagsArr = inputHashtags.value.split(' ');
-
+    // возврат фокуса в поле ввода
+    var focusingError = function () {
+      window.setTimeout(function () {
+        inputHashtags.focus();
+      }, 0);
+    };
     // проверка кол-ва хэштегов
     if (!inputHashtagsArr[0]) {
       inputHashtags.setCustomValidity('');
@@ -296,22 +301,22 @@ var hashtagsValidation = function () {
       return;
     } else if (inputHashtagsArr.length > COUNT_HASHTAGS) {
       inputHashtags.setCustomValidity('Много хэштегов. максимум - 5');
-      inputHashtags.focus();
-      } else {
-        inputHashtags.setCustomValidity('');
-      }
+      focusingError();
+    } else {
+      inputHashtags.setCustomValidity('');
+    }
 
     // проверка валидности каждого хэштега
     for (var i = 0; i < inputHashtagsArr.length; i++) {
       if (inputHashtagsArr[i].charAt(0) !== '#' || inputHashtagsArr[i].length > HASHTAG_LENGTH || inputHashtagsArr[i].length < 2) {
         inputHashtags.setCustomValidity('Неправильный хэштег - ' + inputHashtagsArr[i]);
-        inputHashtags.focus();
+        focusingError();
       }
       // проверка на дублирование
       for (var j = i; j < inputHashtagsArr.length - 1; j++) {
         if (inputHashtagsArr[j + 1] === inputHashtagsArr[i]) {
           inputHashtags.setCustomValidity('Нельзя повторять хэштеги - ' + inputHashtagsArr[i]);
-          inputHashtags.focus();
+          focusingError();
         }
       }
     }
