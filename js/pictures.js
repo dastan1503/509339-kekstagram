@@ -286,15 +286,17 @@ switchEffectType();
 var hashtagsValidation = function () {
   inputHashtags.addEventListener('blur', function () {
     var COUNT_HASHTAGS = 5;
-    var HASHTAG_LENGTH = 19;
+    var HASHTAG_LENGTH = 20;
     var inputHashtagsArr = inputHashtags.value.split(' ');
+    // проверка кол-ва хэштегов
+    if (inputHashtagsArr.length > COUNT_HASHTAGS) {
+      inputHashtags.setCustomValidity('Много хэштегов. максимум - 5');
+      inputHashtags.focus();
+    }
+    // проверка валидности каждого хэштега
     for (var i = 0; i < inputHashtagsArr.length; i++) {
       if (inputHashtagsArr[i].charAt(0) !== '#' || inputHashtagsArr[i].length > HASHTAG_LENGTH || inputHashtagsArr[i].length < 2) {
         inputHashtags.setCustomValidity('Неправильный хэштег - ' + inputHashtagsArr[i]);
-        inputHashtags.focus();
-      }
-      if (i > COUNT_HASHTAGS - 1) {
-        inputHashtags.setCustomValidity('Много хэштегов. максимум - 5');
         inputHashtags.focus();
       }
     }
