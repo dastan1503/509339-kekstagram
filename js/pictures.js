@@ -281,3 +281,24 @@ var switchEffectType = function () {
   }
 };
 switchEffectType();
+
+// валидация введенных хэштегов
+var hashtagsValidation = function () {
+  inputHashtags.addEventListener('blur', function () {
+    var COUNT_HASHTAGS = 5;
+    var HASHTAG_LENGTH = 19;
+    var inputHashtagsArr = inputHashtags.value.split(' ');
+    for (var i = 0; i < inputHashtagsArr.length; i++) {
+      if (inputHashtagsArr[i].charAt(0) !== '#' || inputHashtagsArr[i].length > HASHTAG_LENGTH || inputHashtagsArr[i].length < 2) {
+        inputHashtags.setCustomValidity('Неправильный хэштег - ' + inputHashtagsArr[i]);
+        inputHashtags.focus();
+      }
+      if (i > COUNT_HASHTAGS - 1) {
+        inputHashtags.setCustomValidity('Много хэштегов. максимум - 5');
+        inputHashtags.focus();
+      }
+    }
+  });
+};
+hashtagsValidation();
+
