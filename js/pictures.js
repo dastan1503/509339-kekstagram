@@ -21,6 +21,8 @@ var PICTURE_COUNT = 25;
 var generatedPictureBlocks = [];
 var KEYCODE_ESC = 27;
 var KEYCODE_ENTER = 13;
+var inputHashtags = document.querySelector('.text__hashtags');
+var inputDescription = document.querySelector('.text__description');
 var generateBlocks = function () {
 
   // формирование массива с комментариями
@@ -85,33 +87,23 @@ document.querySelector('.comments-loader').classList.add('visually-hidden');
 var switchFullPhoto = function () {
   var pictureMin = document.querySelectorAll('.picture');
   var pictureBig = document.querySelector('.big-picture');
-
-  var closePopupEsc = function () {
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === KEYCODE_ESC) {
-        pictureBig.classList.add('hidden');
-        document.removeEventListener('keydown', closePopupEsc);
-      }
-    });
-  };
+  var closeButton = document.querySelector('.big-picture__cancel');
 
   var showPictureBig = function (num) {
+    var openPopupPictureBig = function () {
+      pictureBig.classList.remove('hidden');
+      drawFullPicture(generatedPictureBlocks[num]);
+      closePopup(closeButton, pictureBig);
+    };
+
     pictureMin[num].addEventListener('keydown', function (evt) {
       if (evt.keyCode === KEYCODE_ENTER) {
-        pictureBig.classList.remove('hidden');
-        drawFullPicture(generatedPictureBlocks[num]);
-        closePopupEsc();
+        openPopupPictureBig();
       }
     });
 
     pictureMin[num].addEventListener('click', function () {
-      pictureBig.classList.remove('hidden');
-      drawFullPicture(generatedPictureBlocks[num]);
-      closePopupEsc();
-    });
-
-    document.querySelector('.big-picture__cancel').addEventListener('click', function () {
-      pictureBig.classList.add('hidden');
+      openPopupPictureBig();
     });
   };
 
@@ -145,37 +137,46 @@ var switchFullPhoto = function () {
 };
 switchFullPhoto();
 
+// функция закрытия окна
+var closePopup = function (button, PopupName) {
+  var closeWindow = function () {
+    PopupName.classList.add('hidden');
+    document.removeEventListener('keydown', closePopupEsc);
+  };
+
+  var closePopupEsc = function () {
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === KEYCODE_ESC && document.activeElement !== inputDescription && document.activeElement !== inputHashtags) {
+        closeWindow();
+      }
+    });
+  };
+
+  var closePopupEnter = function () {
+    button.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === KEYCODE_ENTER) {
+        closeWindow();
+      }
+    });
+  };
+  var closeClick = function () {
+    button.addEventListener('click', function () {
+      closeWindow();
+    });
+  };
+  closePopupEsc();
+  closePopupEnter();
+  closeClick();
+};
+
 // открытие\закрытие окна редактирования фото
 var switchEditPhotoPopup = function () {
   var uploadFile = document.getElementById('upload-file');
   var editImgwindow = document.querySelector('.img-upload__overlay');
   var closeButton = document.querySelector('.img-upload__cancel');
-
-  var closeWindow = function () {
-    editImgwindow.classList.add('hidden');
-    uploadFile.value = '';
-  };
-
-  var closePopupEsc = function () {
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === KEYCODE_ESC) {
-        closeWindow();
-        document.removeEventListener('keydown', closePopupEsc);
-      }
-    });
-  };
-
-  var closeClick = function () {
-    closeButton.addEventListener('click', function () {
-      closeWindow();
-    });
-  };
-
   uploadFile.addEventListener('change', function () {
     editImgwindow.classList.remove('hidden');
-    closeClick();
-    closePopupEsc();
-
+    closePopup(closeButton, editImgwindow);
   });
 };
 switchEditPhotoPopup();
@@ -255,7 +256,7 @@ var switchEffectType = function () {
       pictureSource.classList.add('effects__preview--' + effectName);
 
       var effectsSource = {
-        none: {type: 'none'},
+        none: {type: 'none', max: 'none'},
         chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
         sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
         marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
@@ -270,6 +271,7 @@ var switchEffectType = function () {
       }
       document.querySelector('.effect-level__pin').style.left = '100%';
       document.querySelector('.effect-level__depth').style.width = '100%';
+      document.querySelector('.effect-level__value').value = effectsSource[effectName].max;
     });
   };
 
@@ -279,3 +281,36 @@ var switchEffectType = function () {
 };
 switchEffectType();
 
+// валидация введенных хэштегов
+var hashtagsValidation = function () {
+  inputHashtags.addEventListener('blur', function () {
+    var COUNT_HASHTAGS = 5;
+    var HASHTAG_LENGTH = 20;
+    var inputHashtagsArr = inputHashtags.value.split(' ');
+    // проверка кол-ва хэштегов
+    if (!inputHashtagsArr[0]) {
+      inputHashtags.setCustomValidity('');
+      // если нет даже первого - прекратить
+      return;
+    } else if (inputHashtagsArr.length > COUNT_HASHTAGS) {
+      inputHashtags.setCustomValidity('Много хэштегов. максимум - 5');
+    } else {
+      inputHashtags.setCustomValidity('');
+    }
+
+    // проверка валидности каждого хэштега
+    for (var i = 0; i < inputHashtagsArr.length; i++) {
+      if (inputHashtagsArr[i].charAt(0) !== '#' || inputHashtagsArr[i].length > HASHTAG_LENGTH || inputHashtagsArr[i].length < 2) {
+
+        inputHashtags.setCustomValidity('Неправильный хэштег - ' + inputHashtagsArr[i]);
+      }
+      // проверка на дублирование
+      for (var j = i; j < inputHashtagsArr.length - 1; j++) {
+        if (inputHashtagsArr[j + 1] === inputHashtagsArr[i]) {
+          inputHashtags.setCustomValidity('Нельзя повторять хэштеги - ' + inputHashtagsArr[i]);
+        }
+      }
+    }
+  });
+};
+hashtagsValidation();
