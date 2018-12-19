@@ -314,3 +314,37 @@ var hashtagsValidation = function () {
   });
 };
 hashtagsValidation();
+
+var dragNDropLevelEffect = function () {
+  var draggableItem = document.querySelector('.effect-level__pin');
+  draggableItem.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var startCoords = evt.clientX;
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      var shift = startCoords - moveEvt.clientX;
+      var finishCoords = draggableItem.offsetLeft - shift;
+      if (finishCoords < 0) {
+        finishCoords = 0;
+      } else if (finishCoords > 450) {
+        finishCoords = 450;
+      } else {
+        startCoords = moveEvt.clientX;
+      }
+      draggableItem.style.left = finishCoords + 'px';
+      document.querySelector('.effect-level__depth').style.width = finishCoords + 'px';
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+  });
+};
+dragNDropLevelEffect();
