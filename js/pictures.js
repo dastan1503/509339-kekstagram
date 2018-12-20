@@ -23,6 +23,20 @@ var KEYCODE_ESC = 27;
 var KEYCODE_ENTER = 13;
 var inputHashtags = document.querySelector('.text__hashtags');
 var inputDescription = document.querySelector('.text__description');
+var pictureSource = document.querySelector('.img-upload__preview');
+var effectRange = document.querySelector('.effect-level__pin');
+var effectLevel = document.querySelector('.effect-level__value');
+var effectName = document.querySelectorAll('.effects__radio');
+var effectCount = 0;
+var effectsSource = {
+  none: {type: 'none', max: 'none'},
+  chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
+  sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
+  marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
+  phobos: {type: 'blur', min: 0, max: 3, unit: 'px'},
+  heat: {type: 'brightness', min: 1, max: 3, unit: ''}
+};
+
 var generateBlocks = function () {
 
   // формирование массива с комментариями
@@ -239,39 +253,27 @@ editScalePhoto();
 // переключение эффекта
 var switchEffectType = function () {
   var effectItem = document.querySelectorAll('.effects__item');
-  var pictureSource = document.querySelector('.img-upload__preview');
-  var effectRange = document.querySelector('.img-upload__effect-level');
-  effectRange.classList.add('hidden');
+  var effectRangeBlock = document.querySelector('.effect-level');
+
+  effectRangeBlock.classList.add('hidden');
   var toggleEffectHandler = function (num) {
     effectItem[num].addEventListener('click', function () {
       if (num === 0) {
-        effectRange.classList.add('hidden');
+        effectRangeBlock.classList.add('hidden');
       } else {
-        effectRange.classList.remove('hidden');
+        effectRangeBlock.classList.remove('hidden');
       }
-      var effectName = effectItem[num].querySelector('.effects__radio').value;
 
+      effectCount = num;
       var findedClass = pictureSource.classList + '';
       pictureSource.classList.remove(findedClass.match(/effects__preview--\w+\b/));
-      pictureSource.classList.add('effects__preview--' + effectName);
+      pictureSource.classList.add('effects__preview--' + effectName[num].value);
 
-      var effectsSource = {
-        none: {type: 'none', max: 'none'},
-        chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
-        sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
-        marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
-        phobos: {type: 'blur', min: 0, max: 3, unit: 'px'},
-        heat: {type: 'brightness', min: 1, max: 3, unit: ''}
-      };
       // сброс уровня фильтра + положение ползунка + цвет полосы ползунка
-      if (effectsSource[effectName].type === 'none') {
-        pictureSource.style.filter = effectsSource[effectName].type;
-      } else {
-        pictureSource.style.filter = effectsSource[effectName].type + '(' + effectsSource[effectName].max + effectsSource[effectName].unit + ')';
-      }
       document.querySelector('.effect-level__pin').style.left = '100%';
       document.querySelector('.effect-level__depth').style.width = '100%';
-      document.querySelector('.effect-level__value').value = effectsSource[effectName].max;
+      pictureSource.style = '';
+      document.querySelector('.effect-level__value').value = '100';
     });
   };
 
@@ -314,3 +316,40 @@ var hashtagsValidation = function () {
   });
 };
 hashtagsValidation();
+
+var dragNDropLevelEffect = function () {
+  effectRange.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var startCoords = evt.clientX;
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      var shift = startCoords - moveEvt.clientX;
+      var finishCoords = effectRange.offsetLeft - shift;
+      if (finishCoords < 0) {
+        finishCoords = 0;
+      } else if (finishCoords > 450) {
+        finishCoords = 450;
+      } else {
+        startCoords = moveEvt.clientX;
+      }
+      effectRange.style.left = finishCoords + 'px';
+      document.querySelector('.effect-level__depth').style.width = finishCoords + 'px';
+      document.querySelector('.effect-level__value').value = Math.floor(finishCoords / 450 * 100);
+      // отрисовка уровня эффекта на изображении в пропорции от положения ползунка
+      pictureSource.style.filter = effectsSource[effectName[effectCount].value].type + '(' + (effectLevel.value / 100 * (effectsSource[effectName[effectCount].value].max - effectsSource[effectName[effectCount].value].min) + effectsSource[effectName[effectCount].value].min) + effectsSource[effectName[effectCount].value].unit + ')';
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+  });
+};
+dragNDropLevelEffect();
+
+
