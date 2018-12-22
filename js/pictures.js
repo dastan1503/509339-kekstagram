@@ -1,41 +1,5 @@
 'use strict';
-
-var descriptionsArr = [
-  'Тестим новую камеру!',
-  'Затусили с друзьями на море',
-  'Как же круто тут кормят',
-  'Отдыхаем...',
-  'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
-  'Вот это тачка!'
-];
-
-var commentsSource = [
-  'Всё отлично!',
-  'В целом всё неплохо. Но не всё.',
-  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-];
-var PICTURE_COUNT = 25;
-var generatedPictureBlocks = [];
-var KEYCODE_ESC = 27;
-var KEYCODE_ENTER = 13;
-var inputHashtags = document.querySelector('.text__hashtags');
-var inputDescription = document.querySelector('.text__description');
-var pictureSource = document.querySelector('.img-upload__preview');
-var effectRange = document.querySelector('.effect-level__pin');
-var effectLevel = document.querySelector('.effect-level__value');
-var effectName = document.querySelectorAll('.effects__radio');
-var effectCount = 0;
-var effectsSource = {
-  none: {type: 'none', max: 'none'},
-  chrome: {type: 'grayscale', min: 0, max: 1, unit: ''},
-  sepia: {type: 'sepia', min: 0, max: 1, unit: ''},
-  marvin: {type: 'invert', min: 0, max: 100, unit: '%'},
-  phobos: {type: 'blur', min: 0, max: 3, unit: 'px'},
-  heat: {type: 'brightness', min: 1, max: 3, unit: ''}
-};
+console.log(window.data());
 
 var generateBlocks = function () {
 
@@ -44,14 +8,14 @@ var generateBlocks = function () {
     var commentsArr = [];
     commentsArr.length = Math.floor(Math.random() * 10);
     for (var i = 0; i < commentsArr.length; i++) {
-      commentsArr[i] = commentsSource[Math.floor(Math.random() * commentsSource.length)];
+      commentsArr[i] = window.data().source.commentsSource[Math.floor(Math.random() * window.data().source.commentsSource.length)];
     }
     return commentsArr;
   };
 
   // рандомизация массива с 1 до 25
   var arr = [];
-  for (var i = 0; i < PICTURE_COUNT; i++) {
+  for (var i = 0; i < window.data().other.PICTURE_COUNT; i++) {
     arr[i] = i + 1;
   }
 
@@ -63,15 +27,15 @@ var generateBlocks = function () {
   }
 
   // создание 25 объектов с заданными свойствами
-  for (var k = 0; k < PICTURE_COUNT; k++) {
-    generatedPictureBlocks[k] = {
+  for (var k = 0; k < window.data().other.PICTURE_COUNT; k++) {
+    window.data().other.generatedPictureBlocks[k] = {
       url: 'photos/' + arr[k] + '.jpg',
       likes: Math.floor(Math.random() * 185) + 15,
       comments: generateComments(),
-      description: descriptionsArr[Math.floor(Math.random() * (descriptionsArr.length - 1))]
+      description: window.data().source.descriptionsArr[Math.floor(Math.random() * (window.data().source.descriptionsArr.length - 1))]
     };
   }
-  return generatedPictureBlocks;
+  return window.data().other.generatedPictureBlocks;
 };
 generateBlocks();
 
@@ -81,7 +45,7 @@ var drawMiniatures = function () {
       .content
       .querySelector('.picture');
   var fragment = document.createDocumentFragment();
-  for (var j = 0; j < generatedPictureBlocks.length; j++) {
+  for (var j = 0; j < window.data().other.generatedPictureBlocks.length; j++) {
     var pictureBlock = pictureTemplate.cloneNode(true);
     pictureBlock.querySelector('.picture__img').src = generatedPictureBlocks[j].url;
     pictureBlock.querySelector('.picture__likes').textContent = generatedPictureBlocks[j].likes;
@@ -285,10 +249,10 @@ switchEffectType();
 
 // валидация введенных хэштегов
 var hashtagsValidation = function () {
-  inputHashtags.addEventListener('blur', function () {
+  window.data().links.inputHashtags.addEventListener('blur', function () {
     var COUNT_HASHTAGS = 5;
     var HASHTAG_LENGTH = 20;
-    var inputHashtagsArr = inputHashtags.value.split(' ');
+    var inputHashtagsArr = window.data().other.inputHashtags.value.split(' ');
     // проверка кол-ва хэштегов
     if (!inputHashtagsArr[0]) {
       inputHashtags.setCustomValidity('');
@@ -318,25 +282,28 @@ var hashtagsValidation = function () {
 hashtagsValidation();
 
 var dragNDropLevelEffect = function () {
-  effectRange.addEventListener('mousedown', function (evt) {
+  window.data().links.effectRange.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     var startCoords = evt.clientX;
+    var RIGHT_COORDS = 450;
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       var shift = startCoords - moveEvt.clientX;
       var finishCoords = effectRange.offsetLeft - shift;
       if (finishCoords < 0) {
         finishCoords = 0;
-      } else if (finishCoords > 450) {
-        finishCoords = 450;
+      } else if (finishCoords > RIGHT_COORDS) {
+        finishCoords = RIGHT_COORDS;
       } else {
         startCoords = moveEvt.clientX;
       }
       effectRange.style.left = finishCoords + 'px';
       document.querySelector('.effect-level__depth').style.width = finishCoords + 'px';
-      document.querySelector('.effect-level__value').value = Math.floor(finishCoords / 450 * 100);
+      document.querySelector('.effect-level__value').value = Math.floor(finishCoords / RIGHT_COORDS * 100);
       // отрисовка уровня эффекта на изображении в пропорции от положения ползунка
-      pictureSource.style.filter = effectsSource[effectName[effectCount].value].type + '(' + (effectLevel.value / 100 * (effectsSource[effectName[effectCount].value].max - effectsSource[effectName[effectCount].value].min) + effectsSource[effectName[effectCount].value].min) + effectsSource[effectName[effectCount].value].unit + ')';
+      var proportion = effectLevel.value / 100 * (effectsSource[effectName[effectCount].value].max - effectsSource[effectName[effectCount].value].min) + effectsSource[effectName[effectCount].value].min;
+
+      pictureSource.style.filter = effectsSource[effectName[effectCount].value].type + '(' + proportion + effectsSource[effectName[effectCount].value].unit + ')';
     };
 
     var onMouseUp = function (upEvt) {
