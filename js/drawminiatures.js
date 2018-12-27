@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(window.drawMiniatures = function () {
   // отрисовка миниатюр
   var pictureTemplate = document.querySelector('#picture')
       .content
@@ -15,4 +15,5 @@
   }
   var pictureContainer = document.querySelector('.pictures');
   pictureContainer.appendChild(fragment);
+  return blocksArr;
 })();

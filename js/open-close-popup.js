@@ -9,7 +9,8 @@
     var showPictureBig = function (num) {
       var openPopupPictureBig = function () {
         pictureBig.classList.remove('hidden');
-        drawFullPicture(window.generateBlocks()[num]);
+        drawFullPicture(window.drawMiniatures()[num]);
+
         closePopup(closeButton, pictureBig);
       };
 
