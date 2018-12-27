@@ -42,8 +42,7 @@
     other: {
       PICTURE_COUNT: 25,
       KEYCODE_ESC: 27,
-      KEYCODE_ENTER: 13,
-      effectCount: 0
+      KEYCODE_ENTER: 13
     }
   };
   return data;

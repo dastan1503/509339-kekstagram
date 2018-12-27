@@ -1,8 +1,7 @@
 'use strict';
-(function () {
+(window.switchEffectType = function () {
   var effectItem = document.querySelectorAll('.effects__item');
   var effectRangeBlock = document.querySelector('.effect-level');
-
   effectRangeBlock.classList.add('hidden');
   var toggleEffectHandler = function (num) {
     effectItem[num].addEventListener('click', function () {
@@ -12,7 +11,6 @@
         effectRangeBlock.classList.remove('hidden');
       }
 
-      window.data().other.effectCount = num;
       var findedClass = window.data().links.pictureSource.classList + '';
       window.data().links.pictureSource.classList.remove(findedClass.match(/effects__preview--\w+\b/));
       window.data().links.pictureSource.classList.add('effects__preview--' +
@@ -29,4 +27,5 @@
   for (var k = 0; k < effectItem.length; k++) {
     toggleEffectHandler(k);
   }
+  return document.querySelector('.effects__item input:checked').value;
 })();

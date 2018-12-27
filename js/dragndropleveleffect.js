@@ -20,14 +20,14 @@
       document.querySelector('.effect-level__value').value = Math.floor(finishCoords / RIGHT_COORDS * 100);
       // отрисовка уровня эффекта на изображении в пропорции от положения ползунка
       var proportion = window.data().links.effectLevel.value / 100 *
-        (window.data().source.effectsSource[window.data().links.effectName[window.data().other.effectCount].value].max -
-        window.data().source.effectsSource[window.data().links.effectName[window.data().other.effectCount].value].min) +
-        window.data().source.effectsSource[window.data().links.effectName[window.data().other.effectCount].value].min;
+        (window.data().source.effectsSource[window.switchEffectType()].max -
+        window.data().source.effectsSource[window.switchEffectType()].min) +
+        window.data().source.effectsSource[window.switchEffectType()].min;
 
-      window.data().links.pictureSource.style.filter = window.data().source.effectsSource[window.data().links.effectName[window.data().other.effectCount].value].type +
-      '(' +
-      proportion +
-      window.data().source.effectsSource[window.data().links.effectName[window.data().other.effectCount].value].unit +
+      window.data().links.pictureSource.style.filter =
+      window.data().source.effectsSource[window.switchEffectType()].type +
+      '(' + proportion +
+      window.data().source.effectsSource[window.switchEffectType()].unit +
       ')';
     };
 
