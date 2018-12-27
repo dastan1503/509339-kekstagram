@@ -2,7 +2,7 @@
 (window.switchEffectType = function () {
   var effectItem = document.querySelectorAll('.effects__item');
   var effectRangeBlock = document.querySelector('.effect-level');
-  effectRangeBlock.classList.add('hidden');
+
   var toggleEffectHandler = function (num) {
     effectItem[num].addEventListener('click', function () {
       if (num === 0) {

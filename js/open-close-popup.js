@@ -95,6 +95,7 @@
     var closeButton = document.querySelector('.img-upload__cancel');
     uploadFile.addEventListener('change', function () {
       editImgwindow.classList.remove('hidden');
+      document.querySelector('.effect-level').classList.add('hidden');
       closePopup(closeButton, editImgwindow);
     });
   };
