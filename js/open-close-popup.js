@@ -28,6 +28,8 @@
       showPictureBig(i);
     }
 
+    var commentBlock = document.querySelector('.social__comment');
+
     var drawFullPicture = function (picture) {
 
       // формирование большого блока с изображением
@@ -41,8 +43,6 @@
       // описание фото
       pictureBig.querySelector('.social__caption').textContent = pictureMin[picture].querySelector('img').dataset.text;
 
-      // переиспользуем существующий блок комментария
-      var commentBlock = document.querySelector('.social__comment');
       // удаляем существующие в разметке комментарии
       var commentsContainer = document.querySelector('.social__comments');
       while (commentsContainer.firstChild) {
