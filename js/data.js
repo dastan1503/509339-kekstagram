@@ -1,5 +1,5 @@
 'use strict';
-window.data = (function () {
+(window.data = function () {
   var data = {
     links: {
       inputHashtags: document.querySelector('.text__hashtags'),

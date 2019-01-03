@@ -9,7 +9,8 @@
     var showPictureBig = function (num) {
       var openPopupPictureBig = function () {
         pictureBig.classList.remove('hidden');
-        drawFullPicture(num);
+        drawFullPicture(window.drawMiniatures()[num]);
+
         closePopup(closeButton, pictureBig);
       };
 
@@ -28,21 +29,14 @@
       showPictureBig(i);
     }
 
-    var commentBlock = document.querySelector('.social__comment');
-
     var drawFullPicture = function (picture) {
-
       // формирование большого блока с изображением
-      // адрес
-      pictureBig.querySelector('.big-picture__img img').src = pictureMin[picture].querySelector('img').src;
-      // лайки кол-во
-      var likes = pictureMin[picture].querySelector('.picture__likes').textContent;
-      pictureBig.querySelector('.likes-count').textContent = likes;
-      // комментарии количество
-      pictureBig.querySelector('.comments-count').textContent = pictureMin[picture].querySelector('.picture__comments').textContent;
-      // описание фото
-      pictureBig.querySelector('.social__caption').textContent = pictureMin[picture].querySelector('img').dataset.text;
-
+      pictureBig.querySelector('.big-picture__img img').src = picture.url;
+      pictureBig.querySelector('.likes-count').textContent = picture.likes;
+      pictureBig.querySelector('.comments-count').textContent = picture.comments.length;
+      pictureBig.querySelector('.social__caption').textContent = picture.description;
+      // переиспользуем существующий блок комментария
+      var commentBlock = document.querySelector('.social__comment');
       // удаляем существующие в разметке комментарии
       var commentsContainer = document.querySelector('.social__comments');
       while (commentsContainer.firstChild) {
@@ -50,10 +44,10 @@
       }
       // отрисовываем сгенерированные комментарии
       var fragment = document.createDocumentFragment();
-      for (i = 0; i < pictureBig.querySelector('.comments-count').textContent; i++) {
+      for (i = 0; i < picture.comments.length; i++) {
         var commentTemplate = commentBlock.cloneNode(true);
         commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
-        commentTemplate.querySelector('.social__text').textContent = pictureMin[picture].querySelector('.picture__comments').dataset[i];
+        commentTemplate.querySelector('.social__text').textContent = picture.comments[i];
         fragment.appendChild(commentTemplate);
       }
       commentsContainer.appendChild(fragment);
