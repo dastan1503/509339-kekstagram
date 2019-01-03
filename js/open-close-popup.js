@@ -3,7 +3,7 @@
   var KEYCODE_ESC = 27;
   var KEYCODE_ENTER = 13;
   var inputDescription = document.querySelector('.text__description');
-  var inputHashtags = document.querySelector('.text__hashtags')
+  var inputHashtags = document.querySelector('.text__hashtags');
   // открытие/закрытие большого фото
   var switchFullPhoto = function () {
     var pictureMin = document.querySelectorAll('.picture');
@@ -13,7 +13,7 @@
     var showPictureBig = function (num) {
       var openPopupPictureBig = function () {
         pictureBig.classList.remove('hidden');
-        drawFullPicture(window.drawMiniatures()[num]);
+        drawFullPicture(window.drawMiniatures[num]);
 
         closePopup(closeButton, pictureBig);
       };

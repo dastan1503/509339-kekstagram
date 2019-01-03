@@ -4,7 +4,7 @@
   var pictureSource = document.querySelector('.img-upload__preview');
   var effectLevel = document.querySelector('.effect-level__value');
   var depth = document.querySelector('.effect-level__depth');
-  var inputValue = document.querySelector('.effect-level__value').value;
+  var inputValue = document.querySelector('.effect-level__value');
   effectRange.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     var startCoords = evt.clientX;
@@ -22,12 +22,12 @@
       }
       effectRange.style.left = finishCoords + 'px';
       depth.style.width = finishCoords + 'px';
-      inputValue = Math.floor(finishCoords / RIGHT_COORDS * 100);
+      inputValue.value = Math.floor(finishCoords / RIGHT_COORDS * 100);
       // отрисовка уровня эффекта на изображении в пропорции от положения ползунка
       var maxValue = window.data.effectsSource[window.switchEffectType()].MAX;
       var minValue = window.data.effectsSource[window.switchEffectType()].MIN;
 
-      var proportion = effectLevel.value / 100 * ( maxValue - minValue) + minValue;
+      var proportion = effectLevel.value / 100 * (maxValue - minValue) + minValue;
 
       pictureSource.style.filter =
       window.data.effectsSource[window.switchEffectType()].type +
