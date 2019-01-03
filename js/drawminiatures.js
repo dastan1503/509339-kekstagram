@@ -5,8 +5,8 @@
       .content
       .querySelector('.picture');
   var fragment = document.createDocumentFragment();
-  var blocksArr = window.generateBlocks();
-  for (var j = 0; j < window.generateBlocks().length; j++) {
+  var blocksArr = window.generateBlocks;
+  for (var j = 0; j < window.generateBlocks.length; j++) {
     var pictureBlock = pictureTemplate.cloneNode(true);
     pictureBlock.querySelector('.picture__img').src = blocksArr[j].url;
     pictureBlock.querySelector('.picture__likes').textContent = blocksArr[j].likes;

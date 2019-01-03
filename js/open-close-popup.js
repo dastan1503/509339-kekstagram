@@ -1,5 +1,9 @@
 'use strict';
 (function () {
+  var KEYCODE_ESC = 27;
+  var KEYCODE_ENTER = 13;
+  var inputDescription = document.querySelector('.text__description');
+  var inputHashtags = document.querySelector('.text__hashtags')
   // открытие/закрытие большого фото
   var switchFullPhoto = function () {
     var pictureMin = document.querySelectorAll('.picture');
@@ -15,7 +19,7 @@
       };
 
       pictureMin[num].addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.data().other.KEYCODE_ENTER) {
+        if (evt.keyCode === KEYCODE_ENTER) {
           openPopupPictureBig();
         }
       });
@@ -29,14 +33,13 @@
       showPictureBig(i);
     }
 
+    var commentBlock = document.querySelector('.social__comment');
     var drawFullPicture = function (picture) {
       // формирование большого блока с изображением
       pictureBig.querySelector('.big-picture__img img').src = picture.url;
       pictureBig.querySelector('.likes-count').textContent = picture.likes;
       pictureBig.querySelector('.comments-count').textContent = picture.comments.length;
       pictureBig.querySelector('.social__caption').textContent = picture.description;
-      // переиспользуем существующий блок комментария
-      var commentBlock = document.querySelector('.social__comment');
       // удаляем существующие в разметке комментарии
       var commentsContainer = document.querySelector('.social__comments');
       while (commentsContainer.firstChild) {
@@ -64,9 +67,9 @@
 
     var closePopupEsc = function () {
       document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.data().other.KEYCODE_ESC &&
-          document.activeElement !== window.data().links.inputDescription &&
-          document.activeElement !== window.data().links.inputHashtags) {
+        if (evt.keyCode === KEYCODE_ESC &&
+          document.activeElement !== inputDescription &&
+          document.activeElement !== inputHashtags) {
           closeWindow();
         }
       });
@@ -74,7 +77,7 @@
 
     var closePopupEnter = function () {
       button.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.data().other.KEYCODE_ENTER) {
+        if (evt.keyCode === KEYCODE_ENTER) {
           closeWindow();
         }
       });
@@ -91,7 +94,7 @@
 
   // открытие\закрытие окна редактирования фото
   var switchEditPhotoPopup = function () {
-    var uploadFile = document.getElementById('upload-file');
+    var uploadFile = document.querySelector('#upload-file');
     var editImgwindow = document.querySelector('.img-upload__overlay');
     var closeButton = document.querySelector('.img-upload__cancel');
     uploadFile.addEventListener('change', function () {

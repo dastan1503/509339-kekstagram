@@ -1,13 +1,18 @@
 'use strict';
 (function () {
-  window.data().links.effectRange.addEventListener('mousedown', function (evt) {
+  var effectRange = document.querySelector('.effect-level__pin');
+  var pictureSource = document.querySelector('.img-upload__preview');
+  var effectLevel = document.querySelector('.effect-level__value');
+  var depth = document.querySelector('.effect-level__depth');
+  var inputValue = document.querySelector('.effect-level__value').value;
+  effectRange.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     var startCoords = evt.clientX;
     var RIGHT_COORDS = 450;
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       var shift = startCoords - moveEvt.clientX;
-      var finishCoords = window.data().links.effectRange.offsetLeft - shift;
+      var finishCoords = effectRange.offsetLeft - shift;
       if (finishCoords < 0) {
         finishCoords = 0;
       } else if (finishCoords > RIGHT_COORDS) {
@@ -15,19 +20,19 @@
       } else {
         startCoords = moveEvt.clientX;
       }
-      window.data().links.effectRange.style.left = finishCoords + 'px';
-      document.querySelector('.effect-level__depth').style.width = finishCoords + 'px';
-      document.querySelector('.effect-level__value').value = Math.floor(finishCoords / RIGHT_COORDS * 100);
+      effectRange.style.left = finishCoords + 'px';
+      depth.style.width = finishCoords + 'px';
+      inputValue = Math.floor(finishCoords / RIGHT_COORDS * 100);
       // отрисовка уровня эффекта на изображении в пропорции от положения ползунка
-      var proportion = window.data().links.effectLevel.value / 100 *
-        (window.data().source.effectsSource[window.switchEffectType()].max -
-        window.data().source.effectsSource[window.switchEffectType()].min) +
-        window.data().source.effectsSource[window.switchEffectType()].min;
+      var maxValue = window.data.effectsSource[window.switchEffectType()].MAX;
+      var minValue = window.data.effectsSource[window.switchEffectType()].MIN;
 
-      window.data().links.pictureSource.style.filter =
-      window.data().source.effectsSource[window.switchEffectType()].type +
+      var proportion = effectLevel.value / 100 * ( maxValue - minValue) + minValue;
+
+      pictureSource.style.filter =
+      window.data.effectsSource[window.switchEffectType()].type +
       '(' + proportion +
-      window.data().source.effectsSource[window.switchEffectType()].unit +
+      window.data.effectsSource[window.switchEffectType()].unit +
       ')';
     };
 

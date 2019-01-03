@@ -1,8 +1,12 @@
 'use strict';
 (window.switchEffectType = function () {
+  var pictureSource = document.querySelector('.img-upload__preview');
   var effectItem = document.querySelectorAll('.effects__item');
   var effectRangeBlock = document.querySelector('.effect-level');
-
+  var effectName = document.querySelectorAll('.effects__radio');
+  var pin = document.querySelector('.effect-level__pin');
+  var depth = document.querySelector('.effect-level__depth');
+  var inputValue = document.querySelector('.effect-level__value').value;
   var toggleEffectHandler = function (num) {
     effectItem[num].addEventListener('click', function () {
       if (num === 0) {
@@ -11,16 +15,15 @@
         effectRangeBlock.classList.remove('hidden');
       }
 
-      var findedClass = window.data().links.pictureSource.classList + '';
-      window.data().links.pictureSource.classList.remove(findedClass.match(/effects__preview--\w+\b/));
-      window.data().links.pictureSource.classList.add('effects__preview--' +
-      window.data().links.effectName[num].value);
+      var findedClass = pictureSource.classList + '';
+      pictureSource.classList.remove(findedClass.match(/effects__preview--\w+\b/));
+      pictureSource.classList.add('effects__preview--' + effectName[num].value);
 
       // сброс уровня фильтра + положение ползунка + цвет полосы ползунка
-      document.querySelector('.effect-level__pin').style.left = '100%';
-      document.querySelector('.effect-level__depth').style.width = '100%';
-      window.data().links.pictureSource.style = '';
-      document.querySelector('.effect-level__value').value = '100';
+      pin.style.left = '100%';
+      depth.style.width = '100%';
+      pictureSource.style = '';
+      inputValue = '100';
     });
   };
 
