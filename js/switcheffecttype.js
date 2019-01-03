@@ -12,7 +12,7 @@
     var effectType = window.data.effectsSource[effectName[num].value].type;
     var effectMAXValue = window.data.effectsSource[effectName[num].value].MAX;
     var effectUnit = window.data.effectsSource[effectName[num].value].unit;
-    effectItem[num].addEventListener('click', function () {
+    effectItem[num].addEventListener('change', function () {
       if (num === 0) {
         effectRangeBlock.classList.add('hidden');
         pictureSource.style.filter = 'none';
