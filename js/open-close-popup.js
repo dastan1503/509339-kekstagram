@@ -59,9 +59,9 @@
   switchFullPhoto();
 
   // функция закрытия окна
-  var closePopup = function (button, PopupName) {
+  var closePopup = function (button, popup) {
     var closeWindow = function () {
-      PopupName.classList.add('hidden');
+      popup.classList.add('hidden');
       document.removeEventListener('keydown', closePopupEsc);
     };
 
@@ -95,12 +95,12 @@
   // открытие\закрытие окна редактирования фото
   var switchEditPhotoPopup = function () {
     var uploadFile = document.querySelector('#upload-file');
-    var editImgwindow = document.querySelector('.img-upload__overlay');
+    var editImgWindow = document.querySelector('.img-upload__overlay');
     var closeButton = document.querySelector('.img-upload__cancel');
     uploadFile.addEventListener('change', function () {
-      editImgwindow.classList.remove('hidden');
+      editImgWindow.classList.remove('hidden');
       document.querySelector('.effect-level').classList.add('hidden');
-      closePopup(closeButton, editImgwindow);
+      closePopup(closeButton, editImgWindow);
     });
   };
   switchEditPhotoPopup();
