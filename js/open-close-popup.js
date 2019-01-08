@@ -1,9 +1,10 @@
 'use strict';
-(function () {
+window.openClosePopup = (function (blocks) {
   var KEYCODE_ESC = 27;
   var KEYCODE_ENTER = 13;
   var inputDescription = document.querySelector('.text__description');
   var inputHashtags = document.querySelector('.text__hashtags');
+  var body = document.querySelector('body');
   // открытие/закрытие большого фото
   var switchFullPhoto = function () {
     var pictureMin = document.querySelectorAll('.picture');
@@ -13,8 +14,8 @@
     var showPictureBig = function (num) {
       var openPopupPictureBig = function () {
         pictureBig.classList.remove('hidden');
-        drawFullPicture(window.drawMiniatures[num]);
-
+        body.classList.add('modal-open');
+        drawFullPicture(blocks[num]);
         closePopup(closeButton, pictureBig);
       };
 
@@ -47,10 +48,14 @@
       }
       // отрисовываем сгенерированные комментарии
       var fragment = document.createDocumentFragment();
-      for (i = 0; i < picture.comments.length; i++) {
+      for (i = 0; i < 5; i++) {
+        if (!picture.comments[i]) {
+          break;
+        }
         var commentTemplate = commentBlock.cloneNode(true);
-        commentTemplate.querySelector('img').src = 'img/avatar-' + Math.ceil(Math.random() * 6) + '.svg';
-        commentTemplate.querySelector('.social__text').textContent = picture.comments[i];
+        commentTemplate.querySelector('img').src = picture.comments[i].avatar;
+        commentTemplate.querySelector('img').title = picture.comments[i].name;
+        commentTemplate.querySelector('.social__text').textContent = picture.comments[i].message;
         fragment.appendChild(commentTemplate);
       }
       commentsContainer.appendChild(fragment);
@@ -62,6 +67,7 @@
   var closePopup = function (button, popup) {
     var closeWindow = function () {
       popup.classList.add('hidden');
+      body.classList.remove('modal-open');
       document.removeEventListener('keydown', closePopupEsc);
     };
 
@@ -104,4 +110,4 @@
     });
   };
   switchEditPhotoPopup();
-})();
+});
