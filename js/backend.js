@@ -9,20 +9,6 @@
   var main = document.querySelector('main');
   main.appendChild(loadPic);
 
-  var inLoad = function (blocks) {
-    window.drawMiniatures(blocks);
-  };
-
-  var inError = function (message) {
-    main.removeChild(loadPic);
-    var errorPopup = document.querySelector('#error')
-      .content
-      .querySelector('.error');
-    errorPopup.querySelector('.error__title').textContent = message;
-    errorPopup.querySelector('.error__button--other').classList.add('hidden');
-    main.appendChild(errorPopup);
-  };
-
   window.load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -50,7 +36,20 @@
     xhr.send();
   };
 
-  window.load(inLoad, inError);
+  window.load(
+      function (blocks) {
+        window.drawMiniatures(blocks);
+      },
+      function (message) {
+        main.removeChild(loadPic);
+        var errorPopup = document.querySelector('#error')
+          .content
+          .querySelector('.error');
+        errorPopup.querySelector('.error__title').textContent = message;
+        errorPopup.querySelector('.error__button--other').classList.add('hidden');
+        main.appendChild(errorPopup);
+      }
+  );
 })();
 
 
