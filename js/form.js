@@ -6,15 +6,33 @@
     .content
     .querySelector('.img-upload__message--loading')
     .cloneNode(true);
+  var uploadPopup = document.querySelector('#success')
+      .content
+      .querySelector('.success')
+      .cloneNode(true);
+  var editImgWindow = document.querySelector('.img-upload__overlay');
+
+  var closingMessage = function (popup) {
+    var closePopup = function () {
+      main.removeChild(popup);
+      document.removeEventListener('click', closePopup);
+      document.removeEventListener('keydown', closePopupESC);
+    };
+    document.addEventListener('click', closePopup);
+
+    var closePopupESC = function (keyevt) {
+      if (keyevt.keyCode === 27) {
+        main.removeChild(popup);
+        document.removeEventListener('click', closePopup);
+        document.removeEventListener('keydown', closePopupESC);
+      }
+    };
+    document.addEventListener('keydown', closePopupESC);
+  };
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
     main.appendChild(loadPic);
-    var uploadPopup = document.querySelector('#success')
-      .content
-      .querySelector('.success')
-      .cloneNode(true);
-    var editImgWindow = document.querySelector('.img-upload__overlay');
 
     window.send(
         new FormData(form),
@@ -27,31 +45,18 @@
           document.querySelector('.img-upload__preview').style = '';
           editImgWindow.classList.add('hidden');
           main.appendChild(uploadPopup);
-
-          var closePopup = function () {
-            main.removeChild(uploadPopup);
-            document.removeEventListener('click', closePopup);
-            document.removeEventListener('keydown', closePopupESC);
-          };
-          document.addEventListener('click', closePopup);
-
-          var closePopupESC = function (keyevt) {
-            if (keyevt.keyCode === 27) {
-              main.removeChild(uploadPopup);
-              document.removeEventListener('click', closePopup);
-              document.removeEventListener('keydown', closePopupESC);
-            }
-          };
-          document.addEventListener('keydown', closePopupESC);
+          closingMessage(uploadPopup);
         },
 
         function (message) {
           editImgWindow.classList.add('hidden');
           var errorPopup = document.querySelector('#error')
             .content
-            .querySelector('.error');
+            .querySelector('.error')
+            .cloneNode(true);
           errorPopup.querySelector('.error__title').textContent = message;
           main.appendChild(errorPopup);
+          closingMessage(errorPopup);
         }
     );
   });
