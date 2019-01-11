@@ -31,15 +31,18 @@
           var closePopup = function () {
             main.removeChild(uploadPopup);
             document.removeEventListener('click', closePopup);
-            document.removeEventListener('keydown', closePopup);
+            document.removeEventListener('keydown', closePopupESC);
           };
-
           document.addEventListener('click', closePopup);
-          document.addEventListener('keydown', function (keyevt) {
+
+          var closePopupESC = function (keyevt) {
             if (keyevt.keyCode === 27) {
-              closePopup();
+              main.removeChild(uploadPopup);
+              document.removeEventListener('click', closePopup);
+              document.removeEventListener('keydown', closePopupESC);
             }
-          });
+          };
+          document.addEventListener('keydown', closePopupESC);
         },
 
         function (message) {
