@@ -30,9 +30,9 @@ window.openClosePopup = (function (blocks) {
       });
     };
 
-    for (var i = 0; i < pictureMin.length; i++) {
-      showPictureBig(i);
-    }
+    pictureMin.forEach( function (element, index, array) {
+      showPictureBig(index);
+    } );
 
     var commentBlock = document.querySelector('.social__comment');
     var drawFullPicture = function (picture) {

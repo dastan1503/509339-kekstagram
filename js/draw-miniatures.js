@@ -15,6 +15,9 @@ window.drawMiniatures = (function (blocks) {
   }
   var pictureContainer = document.querySelector('.pictures');
   pictureContainer.appendChild(fragment);
+
+  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+
   window.openClosePopup(blocksArr);
   return blocksArr;
 });
