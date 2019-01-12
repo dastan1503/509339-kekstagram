@@ -30,9 +30,9 @@ window.openClosePopup = (function (blocks) {
       });
     };
 
-    pictureMin.forEach( function (element, index, array) {
+    pictureMin.forEach(function (element, index) {
       showPictureBig(index);
-    } );
+    });
 
     var commentBlock = document.querySelector('.social__comment');
     var drawFullPicture = function (picture) {
@@ -48,7 +48,7 @@ window.openClosePopup = (function (blocks) {
       }
       // отрисовываем сгенерированные комментарии
       var fragment = document.createDocumentFragment();
-      for (i = 0; i < 5; i++) {
+      for (var i = 0; i < 5; i++) {
         if (!picture.comments[i]) {
           break;
         }
