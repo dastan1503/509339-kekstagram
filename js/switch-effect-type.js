@@ -1,5 +1,5 @@
 'use strict';
-window.switchEffectType = (function () {
+(window.switchEffectType = function () {
   var effectsSource = {
     none: {type: 'none', MAX: 'none'},
     chrome: {type: 'grayscale', MIN: 0, MAX: 1, unit: ''},

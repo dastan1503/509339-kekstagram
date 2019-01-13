@@ -7,6 +7,7 @@
   var inputValue = document.querySelector('.effect-level__value');
   var RIGHT_COORDS = 450;
   effectRange.addEventListener('mousedown', function (evt) {
+    var effect = window.switchEffectType();
     evt.preventDefault();
     var startCoords = evt.clientX;
     var onMouseMove = function (moveEvt) {
@@ -24,15 +25,15 @@
       depth.style.width = finishCoords + 'px';
       inputValue.value = Math.floor(finishCoords / RIGHT_COORDS * 100);
       // отрисовка уровня эффекта на изображении в пропорции от положения ползунка
-      var maxValue = window.switchEffectType.MAX;
-      var minValue = window.switchEffectType.MIN;
+      var maxValue = effect.MAX;
+      var minValue = effect.MIN;
 
       var proportion = effectLevel.value / 100 * (maxValue - minValue) + minValue;
 
       pictureSource.style.filter =
-      window.switchEffectType.type +
+      effect.type +
       '(' + proportion +
-      window.switchEffectType.unit +
+      effect.unit +
       ')';
     };
 
