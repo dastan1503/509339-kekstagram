@@ -25,6 +25,16 @@ window.drawMiniatures = (function (blocks) {
   var buttonNew = document.querySelector('#filter-new');
   var buttonPopular = document.querySelector('#filter-popular');
   var buttonDiscussed = document.querySelector('#filter-discussed');
+  var lastTimeout;
+
+  var drawAfterTime = function (array) {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      drawPicture(array);
+    }, 500);
+  };
 
   buttonPopular.addEventListener('click', function () {
     var buttonActive = document.querySelector('.img-filters__button--active');
@@ -34,7 +44,7 @@ window.drawMiniatures = (function (blocks) {
     pic.forEach(function (element) {
       pictureContainer.removeChild(element);
     });
-    drawPicture(blocks);
+    drawAfterTime(blocks);
   });
 
   buttonNew.addEventListener('click', function () {
@@ -54,7 +64,7 @@ window.drawMiniatures = (function (blocks) {
       blocksWork[rand] = temp;
     }
     blocksWork = blocksWork.slice(0, 10);
-    drawPicture(blocksWork);
+    drawAfterTime(blocksWork);
   });
 
   buttonDiscussed.addEventListener('click', function () {
@@ -78,7 +88,7 @@ window.drawMiniatures = (function (blocks) {
     };
 
     blocksWork = blocksWork.sort(sorting);
-    drawPicture(blocksWork);
+    drawAfterTime(blocksWork);
   });
 
   return blocksSort;
