@@ -37,6 +37,7 @@ window.openClosePopup = (function (blocks) {
     var commentBlock = document.querySelector('.social__comment');
     var drawFullPicture = function (picture) {
       // формирование большого блока с изображением
+      document.querySelector('.comments-loader').classList.remove('hidden')
       pictureBig.querySelector('.big-picture__img img').src = picture.url;
       pictureBig.querySelector('.likes-count').textContent = picture.likes;
       pictureBig.querySelector('.comments-count').textContent = picture.comments.length;
@@ -50,6 +51,7 @@ window.openClosePopup = (function (blocks) {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < 5; i++) {
         if (!picture.comments[i]) {
+          document.querySelector('.comments-loader').classList.add('hidden');
           break;
         }
         var commentTemplate = commentBlock.cloneNode(true);
