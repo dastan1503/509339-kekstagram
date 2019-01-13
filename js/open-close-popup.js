@@ -5,6 +5,7 @@ window.openClosePopup = (function (blocks) {
   var inputDescription = document.querySelector('.text__description');
   var inputHashtags = document.querySelector('.text__hashtags');
   var body = document.querySelector('body');
+  var COUNT_COMMENTS = 5;
   // открытие/закрытие большого фото
   var switchFullPhoto = function () {
     var pictureMin = document.querySelectorAll('.picture');
@@ -49,7 +50,7 @@ window.openClosePopup = (function (blocks) {
       }
       // отрисовываем сгенерированные комментарии
       var fragment = document.createDocumentFragment();
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < COUNT_COMMENTS; i++) {
         if (!picture.comments[i]) {
           document.querySelector('.comments-loader').classList.add('hidden');
           break;
@@ -73,14 +74,16 @@ window.openClosePopup = (function (blocks) {
       document.removeEventListener('keydown', closePopupEsc);
     };
 
+    var onEscKeydown = function (evt) {
+      if (evt.keyCode === KEYCODE_ESC &&
+        document.activeElement !== inputDescription &&
+        document.activeElement !== inputHashtags) {
+        closeWindow();
+      }
+    };
+
     var closePopupEsc = function () {
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === KEYCODE_ESC &&
-          document.activeElement !== inputDescription &&
-          document.activeElement !== inputHashtags) {
-          closeWindow();
-        }
-      });
+      document.addEventListener('keydown', onEscKeydown);
     };
 
     var closePopupEnter = function () {

@@ -36,26 +36,30 @@ window.drawMiniatures = (function (blocks) {
     }, 500);
   };
 
-  buttonPopular.addEventListener('click', function () {
+  var changeActiveButton = function () {
     var buttonActive = document.querySelector('.img-filters__button--active');
     buttonActive.classList.remove('img-filters__button--active');
-    buttonPopular.classList.add('img-filters__button--active');
+  };
+
+  var removeMiniatures = function () {
     var pic = document.querySelectorAll('.picture');
     pic.forEach(function (element) {
       pictureContainer.removeChild(element);
     });
+  };
+
+  buttonPopular.addEventListener('click', function () {
+    changeActiveButton();
+    buttonPopular.classList.add('img-filters__button--active');
+    removeMiniatures();
     drawAfterTime(blocks);
   });
 
   buttonNew.addEventListener('click', function () {
     var blocksWork = blocks.slice(0, blocks.length);
-    var buttonActive = document.querySelector('.img-filters__button--active');
-    buttonActive.classList.remove('img-filters__button--active');
+    changeActiveButton();
     buttonNew.classList.add('img-filters__button--active');
-    var pic = document.querySelectorAll('.picture');
-    pic.forEach(function (element) {
-      pictureContainer.removeChild(element);
-    });
+    removeMiniatures();
 
     for (var j = blocksWork.length - 1; j > 0; j--) {
       var rand = Math.floor(Math.random() * (j + 1));
@@ -69,13 +73,9 @@ window.drawMiniatures = (function (blocks) {
 
   buttonDiscussed.addEventListener('click', function () {
     var blocksWork = blocks.slice(0, blocks.length);
-    var buttonActive = document.querySelector('.img-filters__button--active');
-    buttonActive.classList.remove('img-filters__button--active');
+    changeActiveButton();
     buttonDiscussed.classList.add('img-filters__button--active');
-    var pic = document.querySelectorAll('.picture');
-    pic.forEach(function (element) {
-      pictureContainer.removeChild(element);
-    });
+    removeMiniatures();
 
     var sorting = function (a, b) {
       if (a.comments.length < b.comments.length) {
