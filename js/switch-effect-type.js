@@ -1,5 +1,14 @@
 'use strict';
 (window.switchEffectType = function () {
+  var effectsSource = {
+    none: {type: 'none', MAX: 'none'},
+    chrome: {type: 'grayscale', MIN: 0, MAX: 1, unit: ''},
+    sepia: {type: 'sepia', MIN: 0, MAX: 1, unit: ''},
+    marvin: {type: 'invert', MIN: 0, MAX: 100, unit: '%'},
+    phobos: {type: 'blur', MIN: 0, MAX: 3, unit: 'px'},
+    heat: {type: 'brightness', MIN: 1, MAX: 3, unit: ''}
+  };
+
   var pictureSource = document.querySelector('.img-upload__preview');
   var effectItem = document.querySelectorAll('.effects__item');
   var effectRangeBlock = document.querySelector('.effect-level');
@@ -9,9 +18,10 @@
   var inputValue = document.querySelector('.effect-level__value');
 
   var toggleEffectHandler = function (num) {
-    var effectType = window.data.effectsSource[effectName[num].value].type;
-    var effectMAXValue = window.data.effectsSource[effectName[num].value].MAX;
-    var effectUnit = window.data.effectsSource[effectName[num].value].unit;
+    var effectLink = effectsSource[effectName[num].value];
+    var effectType = effectLink.type;
+    var effectMAXValue = effectLink.MAX;
+    var effectUnit = effectLink.unit;
     effectItem[num].addEventListener('change', function () {
       if (num === 0) {
         effectRangeBlock.classList.add('hidden');
@@ -34,5 +44,5 @@
   for (var k = 0; k < effectItem.length; k++) {
     toggleEffectHandler(k);
   }
-  return document.querySelector('.effects__item input:checked').value;
+  return effectsSource[document.querySelector('.effects__item input:checked').value];
 })();
