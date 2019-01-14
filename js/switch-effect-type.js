@@ -18,9 +18,10 @@
   var inputValue = document.querySelector('.effect-level__value');
 
   var toggleEffectHandler = function (num) {
-    var effectType = effectsSource[effectName[num].value].type;
-    var effectMAXValue = effectsSource[effectName[num].value].MAX;
-    var effectUnit = effectsSource[effectName[num].value].unit;
+    var effectLink = effectsSource[effectName[num].value];
+    var effectType = effectLink.type;
+    var effectMAXValue = effectLink.MAX;
+    var effectUnit = effectLink.unit;
     effectItem[num].addEventListener('change', function () {
       if (num === 0) {
         effectRangeBlock.classList.add('hidden');

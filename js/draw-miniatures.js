@@ -26,14 +26,19 @@ window.drawMiniatures = (function (blocks) {
   var buttonPopular = document.querySelector('#filter-popular');
   var buttonDiscussed = document.querySelector('#filter-discussed');
   var lastTimeout;
+  var timeout = 500;
 
   var drawAfterTime = function (array) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
     lastTimeout = window.setTimeout(function () {
+      var pic = document.querySelectorAll('.picture');
+      pic.forEach(function (element) {
+        pictureContainer.removeChild(element);
+      });
       drawPicture(array);
-    }, 500);
+    }, timeout);
   };
 
   var changeActiveButton = function () {
@@ -41,25 +46,17 @@ window.drawMiniatures = (function (blocks) {
     buttonActive.classList.remove('img-filters__button--active');
   };
 
-  var removeMiniatures = function () {
-    var pic = document.querySelectorAll('.picture');
-    pic.forEach(function (element) {
-      pictureContainer.removeChild(element);
-    });
-  };
-
   buttonPopular.addEventListener('click', function () {
     changeActiveButton();
     buttonPopular.classList.add('img-filters__button--active');
-    removeMiniatures();
     drawAfterTime(blocks);
   });
 
   buttonNew.addEventListener('click', function () {
     var blocksWork = blocks.slice(0, blocks.length);
+    var countNewPicture = 10;
     changeActiveButton();
     buttonNew.classList.add('img-filters__button--active');
-    removeMiniatures();
 
     for (var j = blocksWork.length - 1; j > 0; j--) {
       var rand = Math.floor(Math.random() * (j + 1));
@@ -67,7 +64,7 @@ window.drawMiniatures = (function (blocks) {
       blocksWork[j] = blocksWork[rand];
       blocksWork[rand] = temp;
     }
-    blocksWork = blocksWork.slice(0, 10);
+    blocksWork = blocksWork.slice(0, countNewPicture);
     drawAfterTime(blocksWork);
   });
 
@@ -75,16 +72,15 @@ window.drawMiniatures = (function (blocks) {
     var blocksWork = blocks.slice(0, blocks.length);
     changeActiveButton();
     buttonDiscussed.classList.add('img-filters__button--active');
-    removeMiniatures();
 
     var sorting = function (a, b) {
       if (a.comments.length < b.comments.length) {
         return 1;
-      } else if (a.comments.length > b.comments.length) {
-        return -1;
-      } else {
-        return 0;
       }
+      if (a.comments.length > b.comments.length) {
+        return -1;
+      }
+      return 0;
     };
 
     blocksWork = blocksWork.sort(sorting);
