@@ -7,15 +7,20 @@ window.drawMiniatures = (function (blocks) {
   var fragment = document.createDocumentFragment();
   var blocksSort = blocks.slice(0, blocks.length);
   var pictureContainer = document.querySelector('.pictures');
+  var filterButtons = document.querySelectorAll('.img-filters__button');
+
+  filterButtons.forEach(function (element) {
+    element.tabindex = '0';
+  });
 
   var drawPicture = function (blocksArr) {
-    for (var j = 0; j < blocksArr.length; j++) {
+    blocksArr.forEach(function (element) {
       var pictureBlock = pictureTemplate.cloneNode(true);
-      pictureBlock.querySelector('.picture__img').src = blocksArr[j].url;
-      pictureBlock.querySelector('.picture__likes').textContent = blocksArr[j].likes;
-      pictureBlock.querySelector('.picture__comments').textContent = blocksArr[j].comments.length;
+      pictureBlock.querySelector('.picture__img').src = element.url;
+      pictureBlock.querySelector('.picture__likes').textContent = element.likes;
+      pictureBlock.querySelector('.picture__comments').textContent = element.comments.length;
       fragment.appendChild(pictureBlock);
-    }
+    });
     pictureContainer.appendChild(fragment);
     window.openClosePopup(blocksArr);
   };
@@ -74,13 +79,10 @@ window.drawMiniatures = (function (blocks) {
     buttonDiscussed.classList.add('img-filters__button--active');
 
     var sorting = function (a, b) {
-      if (a.comments.length < b.comments.length) {
-        return 1;
+      if (a.comments.length === b.comments.length) {
+        return 0;
       }
-      if (a.comments.length > b.comments.length) {
-        return -1;
-      }
-      return 0;
+      return a.comments.length < b.comments.length ? 1 : -1;
     };
 
     blocksWork = blocksWork.sort(sorting);

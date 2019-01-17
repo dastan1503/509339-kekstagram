@@ -172,6 +172,10 @@ main {
   border: none;
 }
 
+.img-filters__button:focus, .img-filters__button:hover {
+  outline: 1px solid red;
+}
+
 .img-filters__button:active,
 .img-filters__button--active {
   color: #ff4e4e;

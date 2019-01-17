@@ -13,21 +13,21 @@
   var editImgWindow = document.querySelector('.img-upload__overlay');
 
   var closingMessage = function (popup) {
-    var closePopup = function () {
+    var closePopupHandler = function () {
       main.removeChild(popup);
-      document.removeEventListener('click', closePopup);
-      document.removeEventListener('keydown', closePopupESC);
+      document.removeEventListener('click', closePopupHandler);
+      document.removeEventListener('keydown', closePopupESCHandler);
     };
-    document.addEventListener('click', closePopup);
+    document.addEventListener('click', closePopupHandler);
 
-    var closePopupESC = function (keyevt) {
+    var closePopupESCHandler = function (keyevt) {
       if (keyevt.keyCode === 27) {
         main.removeChild(popup);
-        document.removeEventListener('click', closePopup);
-        document.removeEventListener('keydown', closePopupESC);
+        document.removeEventListener('click', closePopupHandler);
+        document.removeEventListener('keydown', closePopupESCHandler);
       }
     };
-    document.addEventListener('keydown', closePopupESC);
+    document.addEventListener('keydown', closePopupESCHandler);
   };
 
   form.addEventListener('submit', function (evt) {
@@ -38,11 +38,7 @@
         new FormData(form),
 
         function () {
-          document.querySelector('#upload-file').value = '';
-          document.querySelector('.scale__control--value').value = '100%';
-          document.querySelector('.effect-level__value').value = 100;
-          document.querySelector('.img-upload__preview').classList = 'img-upload__preview img-upload__preview--none';
-          document.querySelector('.img-upload__preview').style = '';
+          window.resetForm();
           editImgWindow.classList.add('hidden');
           main.appendChild(uploadPopup);
           closingMessage(uploadPopup);

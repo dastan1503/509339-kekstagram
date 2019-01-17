@@ -41,8 +41,9 @@
     });
   };
 
-  for (var k = 0; k < effectItem.length; k++) {
-    toggleEffectHandler(k);
-  }
+  effectItem.forEach(function (element, index) {
+    toggleEffectHandler(index);
+  });
+
   return effectsSource[document.querySelector('.effects__item input:checked').value];
 })();

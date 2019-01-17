@@ -10,7 +10,7 @@
     var effect = window.switchEffectType();
     evt.preventDefault();
     var startCoords = evt.clientX;
-    var onMouseMove = function (moveEvt) {
+    var onMouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
       var shift = startCoords - moveEvt.clientX;
       var finishCoords = effectRange.offsetLeft - shift;
@@ -37,14 +37,13 @@
       ')';
     };
 
-    var onMouseUp = function (upEvt) {
+    var onMouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mousemove', onMouseMoveHandler);
+      document.removeEventListener('mouseup', onMouseUpHandler);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-
+    document.addEventListener('mousemove', onMouseMoveHandler);
+    document.addEventListener('mouseup', onMouseUpHandler);
   });
 })();

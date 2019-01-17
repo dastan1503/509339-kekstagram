@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(window.editScalePhoto = function () {
   var minValue = 25;
   var maxValue = 100;
   var stepValue = 25;
@@ -50,4 +50,4 @@
     value = textControlValue.value;
     scalable();
   });
-})();
+});
