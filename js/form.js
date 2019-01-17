@@ -38,11 +38,7 @@
         new FormData(form),
 
         function () {
-          document.querySelector('#upload-file').value = '';
-          document.querySelector('.scale__control--value').value = '100%';
-          document.querySelector('.effect-level__value').value = 100;
-          document.querySelector('.img-upload__preview').classList = 'img-upload__preview img-upload__preview--none';
-          document.querySelector('.img-upload__preview').style = '';
+          window.resetForm();
           editImgWindow.classList.add('hidden');
           main.appendChild(uploadPopup);
           closingMessage(uploadPopup);

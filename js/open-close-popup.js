@@ -82,6 +82,9 @@ window.openClosePopup = (function (blocks) {
   // функция закрытия окна
   var closePopup = function (button, popup) {
     var closeWindow = function () {
+      if (button === document.querySelector('.img-upload__cancel')) {
+        window.resetForm();
+      }
       popup.classList.add('hidden');
       body.classList.remove('modal-open');
       document.removeEventListener('keydown', closePopupEsc);
@@ -142,6 +145,8 @@ window.openClosePopup = (function (blocks) {
 
       editImgWindow.classList.remove('hidden');
       document.querySelector('.effect-level').classList.add('hidden');
+      document.querySelector('.scale__control--value').value = '100%';
+      window.editScalePhoto();
       closePopup(closeButton, editImgWindow);
     });
   };
