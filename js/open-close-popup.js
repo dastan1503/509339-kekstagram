@@ -121,7 +121,25 @@ window.openClosePopup = (function (blocks) {
     var uploadFile = document.querySelector('#upload-file');
     var editImgWindow = document.querySelector('.img-upload__overlay');
     var closeButton = document.querySelector('.img-upload__cancel');
+    var preview = document.querySelector('.img-upload__preview img');
+    var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+
     uploadFile.addEventListener('change', function () {
+      var file = uploadFile.files[0];
+      var fileName = file.name.toLowerCase();
+      var matches = FILE_TYPES.some(function (it) {
+        return fileName.endsWith(it);
+      });
+
+      if (matches) {
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          preview.src = reader.result;
+        });
+        reader.readAsDataURL(file);
+      }
+
       editImgWindow.classList.remove('hidden');
       document.querySelector('.effect-level').classList.add('hidden');
       closePopup(closeButton, editImgWindow);
