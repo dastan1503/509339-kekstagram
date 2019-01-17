@@ -9,13 +9,13 @@ window.drawMiniatures = (function (blocks) {
   var pictureContainer = document.querySelector('.pictures');
 
   var drawPicture = function (blocksArr) {
-    for (var j = 0; j < blocksArr.length; j++) {
+    blocksArr.forEach(function (element) {
       var pictureBlock = pictureTemplate.cloneNode(true);
-      pictureBlock.querySelector('.picture__img').src = blocksArr[j].url;
-      pictureBlock.querySelector('.picture__likes').textContent = blocksArr[j].likes;
-      pictureBlock.querySelector('.picture__comments').textContent = blocksArr[j].comments.length;
+      pictureBlock.querySelector('.picture__img').src = element.url;
+      pictureBlock.querySelector('.picture__likes').textContent = element.likes;
+      pictureBlock.querySelector('.picture__comments').textContent = element.comments.length;
       fragment.appendChild(pictureBlock);
-    }
+    });
     pictureContainer.appendChild(fragment);
     window.openClosePopup(blocksArr);
   };

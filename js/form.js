@@ -13,21 +13,21 @@
   var editImgWindow = document.querySelector('.img-upload__overlay');
 
   var closingMessage = function (popup) {
-    var closePopup = function () {
+    var closePopupHandler = function () {
       main.removeChild(popup);
-      document.removeEventListener('click', closePopup);
-      document.removeEventListener('keydown', closePopupESC);
+      document.removeEventListener('click', closePopupHandler);
+      document.removeEventListener('keydown', closePopupESCHandler);
     };
-    document.addEventListener('click', closePopup);
+    document.addEventListener('click', closePopupHandler);
 
-    var closePopupESC = function (keyevt) {
+    var closePopupESCHandler = function (keyevt) {
       if (keyevt.keyCode === 27) {
         main.removeChild(popup);
-        document.removeEventListener('click', closePopup);
-        document.removeEventListener('keydown', closePopupESC);
+        document.removeEventListener('click', closePopupHandler);
+        document.removeEventListener('keydown', closePopupESCHandler);
       }
     };
-    document.addEventListener('keydown', closePopupESC);
+    document.addEventListener('keydown', closePopupESCHandler);
   };
 
   form.addEventListener('submit', function (evt) {

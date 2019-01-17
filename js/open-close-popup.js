@@ -74,7 +74,7 @@ window.openClosePopup = (function (blocks) {
       document.removeEventListener('keydown', closePopupEsc);
     };
 
-    var onEscKeydown = function (evt) {
+    var onEscKeydownHandler = function (evt) {
       if (evt.keyCode === KEYCODE_ESC &&
         document.activeElement !== inputDescription &&
         document.activeElement !== inputHashtags) {
@@ -83,7 +83,7 @@ window.openClosePopup = (function (blocks) {
     };
 
     var closePopupEsc = function () {
-      document.addEventListener('keydown', onEscKeydown);
+      document.addEventListener('keydown', onEscKeydownHandler);
     };
 
     var closePopupEnter = function () {
