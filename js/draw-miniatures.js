@@ -7,6 +7,11 @@ window.drawMiniatures = (function (blocks) {
   var fragment = document.createDocumentFragment();
   var blocksSort = blocks.slice(0, blocks.length);
   var pictureContainer = document.querySelector('.pictures');
+  var filterButtons = document.querySelectorAll('.img-filters__button');
+
+  filterButtons.forEach(function (element) {
+    element.tabindex = '0';
+  });
 
   var drawPicture = function (blocksArr) {
     blocksArr.forEach(function (element) {
