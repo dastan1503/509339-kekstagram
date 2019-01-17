@@ -5,7 +5,7 @@
   var errorMessage = function (message) {
     if (!message) {
       hashtags.setCustomValidity('');
-      hashtags.style = '';
+      hashtags.style.outline = '';
       submitButton.disabled = false;
     } else {
       hashtags.style.outline = '2px solid red';
