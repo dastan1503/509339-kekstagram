@@ -74,13 +74,10 @@ window.drawMiniatures = (function (blocks) {
     buttonDiscussed.classList.add('img-filters__button--active');
 
     var sorting = function (a, b) {
-      if (a.comments.length < b.comments.length) {
-        return 1;
+      if (a.comments.length === b.comments.length) {
+        return 0;
       }
-      if (a.comments.length > b.comments.length) {
-        return -1;
-      }
-      return 0;
+      return a.comments.length < b.comments.length ? 1 : -1;
     };
 
     blocksWork = blocksWork.sort(sorting);
