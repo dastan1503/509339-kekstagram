@@ -2,11 +2,25 @@
 (function () {
   var hashtags = document.querySelector('.text__hashtags');
   var submitButton = document.querySelector('#upload-submit');
+  var errorMessage = function (message) {
+    if (!message) {
+      hashtags.setCustomValidity('');
+      hashtags.style = '';
+      submitButton.disabled = false;
+    } else {
+      hashtags.style.outline = '2px solid red';
+      hashtags.setCustomValidity(message);
+      submitButton.disabled = true;
+    }
+  };
+
   hashtags.addEventListener('input', function () {
     var COUNT_HASHTAGS = 5;
     var HASHTAG_LENGTH = 20;
-    var hashtagsArr = hashtags.value.split(' ');
+    var hashtagsArr = hashtags.value.toLowerCase().split(' ');
     var count = hashtagsArr.length - 1;
+
+
     // удаляем пустые элементы массива
     for (var i = count; i >= 0; i--) {
       if (hashtagsArr[i] === '') {
@@ -15,33 +29,23 @@
     }
 
     // проверка кол-ва хэштегов
-    if (hashtagsArr[0] === '') {
-      hashtags.setCustomValidity('');
-      submitButton.disabled = false;
-      // если нет даже первого - прекратить
-      return;
-    } else if (hashtagsArr.length > COUNT_HASHTAGS) {
-      hashtags.setCustomValidity('Много хэштегов. максимум - 5');
-      submitButton.disabled = true;
+    if (hashtagsArr.length > COUNT_HASHTAGS) {
+      errorMessage('Много хэштегов. максимум - 5');
     } else {
-      hashtags.setCustomValidity('');
-      submitButton.disabled = false;
+      errorMessage();
     }
 
     // проверка валидности каждого хэштега
-    for (i = 0; i < hashtagsArr.length; i++) {
-      if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i].length > HASHTAG_LENGTH || hashtagsArr[i].length < 2) {
-
-        hashtags.setCustomValidity('Неправильный хэштег - ' + hashtagsArr[i]);
-        submitButton.disabled = true;
+    hashtagsArr.forEach(function (element, index) {
+      if (element.charAt(0) !== '#' || element.length > HASHTAG_LENGTH || element.length < 2) {
+        errorMessage('Неправильный хэштег - ' + element);
       }
       // проверка на дублирование
-      for (var j = i; j < hashtagsArr.length - 1; j++) {
-        if (hashtagsArr[j + 1] === hashtagsArr[i]) {
-          hashtags.setCustomValidity('Нельзя повторять хэштеги - ' + hashtagsArr[i]);
-          submitButton.disabled = true;
+      for (var j = index; j < hashtagsArr.length - 1; j++) {
+        if (hashtagsArr[j + 1] === element) {
+          errorMessage('Нельзя повторять хэштеги - ' + element);
         }
       }
-    }
+    });
   });
 })();
