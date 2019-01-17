@@ -11,6 +11,7 @@ window.openClosePopup = (function (blocks) {
     var pictureMin = document.querySelectorAll('.picture');
     var pictureBig = document.querySelector('.big-picture');
     var closeButton = document.querySelector('.big-picture__cancel');
+    var commentBlock = document.querySelector('.social__comment');
 
     var showPictureBig = function (num) {
       var openPopupPictureBig = function () {
@@ -19,49 +20,61 @@ window.openClosePopup = (function (blocks) {
         drawFullPicture(blocks[num]);
         closePopup(closeButton, pictureBig);
       };
-
       pictureMin[num].addEventListener('keydown', function (evt) {
         if (evt.keyCode === KEYCODE_ENTER) {
           openPopupPictureBig();
         }
       });
-
       pictureMin[num].addEventListener('click', function () {
         openPopupPictureBig();
       });
     };
-
     pictureMin.forEach(function (element, index) {
       showPictureBig(index);
     });
 
-    var commentBlock = document.querySelector('.social__comment');
     var drawFullPicture = function (picture) {
       // формирование большого блока с изображением
-      document.querySelector('.comments-loader').classList.remove('hidden');
+      var buttonLoadComments = document.querySelector('.comments-loader');
+      buttonLoadComments.classList.remove('hidden');
       pictureBig.querySelector('.big-picture__img img').src = picture.url;
       pictureBig.querySelector('.likes-count').textContent = picture.likes;
-      pictureBig.querySelector('.comments-count').textContent = picture.comments.length;
       pictureBig.querySelector('.social__caption').textContent = picture.description;
+
       // удаляем существующие в разметке комментарии
       var commentsContainer = document.querySelector('.social__comments');
+
       while (commentsContainer.firstChild) {
         commentsContainer.removeChild(commentsContainer.firstChild);
       }
+
       // отрисовываем сгенерированные комментарии
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < COUNT_COMMENTS; i++) {
-        if (!picture.comments[i]) {
-          document.querySelector('.comments-loader').classList.add('hidden');
-          break;
+      var drawComments = function () {
+
+        var fragment = document.createDocumentFragment();
+
+        for (var i = 0; i < COUNT_COMMENTS; i++) {
+          var commentsInPage = document.querySelectorAll('.social__comment').length;
+          if (!picture.comments[i + commentsInPage]) {
+            buttonLoadComments.classList.add('hidden');
+            break;
+          }
+          var commentTemplate = commentBlock.cloneNode(true);
+          commentTemplate.querySelector('img').src = picture.comments[i + commentsInPage].avatar;
+          commentTemplate.querySelector('img').title = picture.comments[i + commentsInPage].name;
+          commentTemplate.querySelector('.social__text').textContent = picture.comments[i + commentsInPage].message;
+          fragment.appendChild(commentTemplate);
         }
-        var commentTemplate = commentBlock.cloneNode(true);
-        commentTemplate.querySelector('img').src = picture.comments[i].avatar;
-        commentTemplate.querySelector('img').title = picture.comments[i].name;
-        commentTemplate.querySelector('.social__text').textContent = picture.comments[i].message;
-        fragment.appendChild(commentTemplate);
-      }
-      commentsContainer.appendChild(fragment);
+
+        commentsContainer.appendChild(fragment);
+        document.querySelector('.social__comment-count').textContent = (i + commentsInPage) + ' из ' + picture.comments.length + ' комментариев';
+      };
+      drawComments();
+
+      buttonLoadComments.addEventListener('click', function (evt) {
+        evt.preventDefault();
+        drawComments();
+      });
     };
   };
   switchFullPhoto();
